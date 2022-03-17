@@ -1,20 +1,11 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
-from datetime import datetime, timezone, timedelta
-
-from functools import wraps
 
 from flask import request
 from flask_restx import Api, Resource, fields
 
-import jwt
 
-from .models import db, Users, Buyers
+from .models import Users, Buyers
 
-from .config import BaseConfig
 
 rest_api = Api(version="1.0", title="Users API")
 
@@ -27,7 +18,8 @@ signup_model = rest_api.model(
     "SignUpModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=64),
-        "first_name": fields.String(required=True, min_length=4, max_length=64),
+        "first_name": fields.String(required=True,
+                                    min_length=4, max_length=64),
         "password": fields.String(required=True, min_length=4, max_length=16),
     },
 )
@@ -71,11 +63,17 @@ class Register(Resource):
         _first_name = req_data.get("first_name")
         _age = req_data.get("age")
 
+        _home_address_id = req_data.get("home_address_id")
+        _billing_address_id = req_data.get("billing_address_id")
         user_exists = Buyers.get_by_email(_email)
         if user_exists:
-            return {"success": False, "msg": f"Email({_email}) already taken"}, 400
+            return {"success": False,
+                    "msg": f"Email({_email}) already taken"}, 400
 
-        new_user = Buyers(email=_email, first_name=_first_name, age=_age)
+        new_user = Buyers(email=_email, first_name=_first_name, age=_age,
+                          home_address_id=_home_address_id,
+                          billing_address_id=_billing_address_id
+                          )
 
         # hashed password
         new_user.set_password(_password)

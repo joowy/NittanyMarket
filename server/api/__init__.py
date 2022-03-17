@@ -8,13 +8,17 @@ import json
 from flask import Flask
 from flask_cors import CORS
 
+
 from .routes import rest_api
 from .models import db
+
+from .config import Config
+
 
 app = Flask(__name__)
 
 
-app.config.from_object("api.config.BaseConfig")
+app.config.from_object(Config)
 
 db.init_app(app)
 rest_api.init_app(app)
@@ -22,6 +26,8 @@ CORS(app)
 
 
 # Setup database
+
+
 @app.before_first_request
 def initialize_database():
     db.create_all()
