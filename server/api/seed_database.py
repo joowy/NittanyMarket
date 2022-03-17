@@ -1,7 +1,8 @@
 # from api import app
-from api.models import Users, Buyers, Address, db
+from api.models import Users, Buyers, Address, db, Sellers
 import os
 import csv
+
 
 file_path = os.path.dirname(os.path.realpath(__file__))
 mock_data_dir = os.path.join(file_path, "mock")
@@ -58,6 +59,9 @@ def seed_buyers():
     print("seeding buyers")
     try:
         data = csv.reader(open(buyers_file, encoding="utf-8-sig"))
+        # skip header row
+        next(data)
+
         for record in data:
             email = record[0]
             first_name = record[1]
@@ -67,8 +71,40 @@ def seed_buyers():
             home_address_id = record[5]
             billing_address_id = record[6]
 
-            if email != "email":
+            buyer = db.session.query(Buyers).filter_by(email=email).first()
+            print(buyer)
+            if not buyer:
                 new_record = Buyers(
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    gender=gender,
+                    age=age,
+                    home_address_id=home_address_id,
+                    billing_address_id=billing_address_id,
+                )
+                db.session.add(new_record)
+        db.session.commit()
+    except Exception as e:
+        print("buyer seed error", e)
+        db.session.rollback()
+
+
+def seed_sellers():
+    # with app.app_context():
+    sellers_file = os.path.join(mock_data_dir, "Sellers.csv")
+    print("seeding sellers")
+    try:
+        data = csv.reader(open(sellers_file, encoding="utf-8-sig"))
+        for record in data:
+
+            email = record[0]
+            routing_number = record[1]
+            account_number = record[2]
+            balance = record[3]
+
+            if email != "email":
+                new_record = Sellers(
                     email=email,
                     first_name=first_name,
                     last_name=last_name,

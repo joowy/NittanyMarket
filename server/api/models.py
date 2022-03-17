@@ -26,9 +26,6 @@ class Users(db.Model):
 
     email = db.Column(db.String, nullable=False, primary_key=True)
     password = db.Column(db.Text)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"user Email {self.email}"
@@ -71,6 +68,7 @@ class Buyers(Users):
     __mapper_args__ = {
         "polymorphic_identity": __tablename__,
     }
+
     # FK
     home_address_id = db.Column(db.ForeignKey("Address.address_ID"))
     billing_address_id = db.Column(db.ForeignKey("Address.address_ID"))
@@ -122,6 +120,9 @@ class Categories(db.Model):
     __tablename__ = "Categories"
     parent_category = db.Column(db.ForeignKey("Categories.category_name"))
     category_name = db.Column(db.String, primary_key=True)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
 
     def __repr__(self):
         return f"Categories parent {self.parent_category}, name {self.category_name}"
@@ -143,61 +144,115 @@ class Product_Listings(db.Model):
 
     # relationship
     category_relationship = db.relationship("Categories", foreign_keys=[category])
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
 
     def __repr__(self):
         return f"Product_Listings seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
 
 
-# class Orders(db.Model):
-#     transaction_id = db.Colum()
-#     seller_email = db.Colum()
-#     listing_id = db.Colum()
-#     buyer_email = db.Colum()
-#     date = db.Colum()
-#     quantity = db.Colum()
-#     payment = db.Colum()
+class Orders(db.Model):
+    __tablename__ = "Orders"
+    transaction_id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    quantity = db.Column(db.Integer)
+    payment = db.Column(db.Float)
+    # FK
+    buyer_email = db.Column(db.ForeignKey("Buyers.email"), nullable=False)
+    seller_email = db.Column(db.ForeignKey("Sellers.email"), nullable=False)
+    listing_id = db.Column(db.ForeignKey("Product_Listings.listing_id"), nullable=False)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+
+    def __repr__(self):
+        return f"buyer_email seller_email listing_id {self.buyer_email,self.seller_email, self.listing_id}"
 
 
-# class Credit_Card(db.Model):
-#     __tablename__ = 'Credit_Card'
+class Credit_Card(db.Model):
+    __tablename__ = "Credit_Card"
 
-#     credit_card_num = db.Column(db.Integer, primary_key=True)
-#     card_code = db.Column(db.Integer)
-#     expire_month = db.Column(db.String(64))
-#     expire_year = db.Column(db.String(64))
-#     card_type = db.Column(db.String(64))
-#     Owner_email = db.Column(db.Integer, db.ForeignKey('Buyers.email',
-#                                                       onupdate='CASCADE',
-#                                                       ondelete='CASCADE'),
-#                             index=True, nullable=False)
+    credit_card_num = db.Column(db.String, primary_key=True)
+    card_code = db.Column(db.Integer, nullable=False,)
+    expire_month = db.Column(db.String, nullable=False,)
+    expire_year = db.Column(db.String, nullable=False,)
+    card_type = db.Column(db.String)
+    owner_email = db.Column(
+        db.ForeignKey("Buyers.email", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=False,
+    )
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
 
-#     def __repr__(self):
-#         return f"credit_card_num {self.credit_card_num}"
+    def __repr__(self):
+        return f"credit_card_num {self.credit_card_num}"
 
-#     def save(self):
-#         db.session.add(self)
-#         db.session.commit()
-
-
-# class Zipcode_Info(db.Model):
-#     zipcode = db.Column(db.String(5), primary_key=True)
-#     city = db.Column(db.String(120))
-#     state_id = db.Column(db.Integer)
-#     population = db.Column(db.Integer)
-#     density = db.Column(db.Float)
-#     county_name = db.Column(db.String(64))
-#     timezone = db.Column(db.String(64))
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
-# class Reviews(db.Model):
-#     buyer_email = db.Column()
-#     seller_email = db.Column()
-#     listing_id = db.Column()
-#     review_desc = db.Column()
+class Zipcode_Info(db.Model):
+    __tablename__ = "Zipcode_Info"
+
+    zipcode = db.Column(db.String(5), primary_key=True)
+    city = db.Column(db.String(120))
+    state_id = db.Column(db.String)
+    population = db.Column(db.Integer)
+    density = db.Column(db.Float)
+    county_name = db.Column(db.String)
+    timezone = db.Column(db.String)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+
+    def __repr__(self):
+        return f"zipcode {self.zipcode}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
-# class Rating(db.Model):
-#     Buyer_Email = db.Column()
-#     Seller_Email = db.Column()
-#     Rating = db.Column()
-#     Rating_Desc = db.Column()
+class Reviews(db.Model):
+    __tablename__ = "Reviews"
+
+    buyer_email = db.Column(db.ForeignKey("Buyers.email"), primary_key=True)
+    seller_email = db.Column(
+        db.ForeignKey("Product_Listings.seller_email"), primary_key=True
+    )
+    listing_id = db.Column(
+        db.ForeignKey("Product_Listings.listing_id"), primary_key=True
+    )
+    review_desc = db.Column(db.Text)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+
+    def __repr__(self):
+        return f"reviews buyer_email seller_email listing_id {self.buyer_email , self.seller_email , self.listing_id }"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class Rating(db.Model):
+    __tablename__ = "Rating"
+
+    buyer_email = db.Column(db.ForeignKey("Buyers.email"), primary_key=True)
+    seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
+    rating = db.Column(db.Float)
+    rating_desc = db.Column(db.Text)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+
+    def __repr__(self):
+        return f"buyer_email seller_emailrating {self.buyer_email , self.seller_email , self.rating }"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
