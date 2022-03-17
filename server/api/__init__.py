@@ -1,13 +1,13 @@
-
-
 import json
 
 from flask import Flask
 from flask_cors import CORS
 
+from .seed_database import seed_address, seed_buyers, seed_users
+
 
 from .routes import rest_api
-from .models import db
+from .models import Buyers, Users, db, Address
 
 from .config import Config
 
@@ -25,11 +25,17 @@ CORS(app)
 # Setup database
 
 
-@app.before_first_request
-def initialize_database():
+# @app.before_first_request
+# def initialize_database():
+# db.create_all()
+with app.app_context():
     db.create_all()
-
-
+    if not (Address.query.first()):
+        seed_address()
+    if not (Users.query.first()):
+        seed_users()
+    if not (Buyers.query.first()):
+        seed_buyers()
 """
    Custom responses
 """

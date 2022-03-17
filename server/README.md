@@ -32,11 +32,27 @@ $ # .\venv\Scripts\activate
 ```bash
 $ pip install -r requirements.txt
 ```
- 
+
+ <br />
+
+> **Step #4** - set environment variables
+
+*copy env.example*
+```bash
+$ cp .env.example .env 
+```
+in .env set variables 
+```
+SECRET_KEY= example
+JWT_SECRET_KEY = example
+
+FLASK_HOST = "127.0.0.1"
+FLASK_PORT = 7000
+```
  
 <br />
 
-> **Step #4** - start test APIs server at `http://127.0.0.1/:5000`
+> **Step 5** - start test APIs server at `http://127.0.0.1/:5000`
 
 ```bash
 $ python run.py 

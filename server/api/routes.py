@@ -1,5 +1,3 @@
-
-
 from flask import request
 from flask_restx import Api, Resource, fields
 
@@ -18,8 +16,7 @@ signup_model = rest_api.model(
     "SignUpModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=64),
-        "first_name": fields.String(required=True,
-                                    min_length=4, max_length=64),
+        "first_name": fields.String(required=True, min_length=4, max_length=64),
         "password": fields.String(required=True, min_length=4, max_length=16),
     },
 )
@@ -65,15 +62,17 @@ class Register(Resource):
 
         _home_address_id = req_data.get("home_address_id")
         _billing_address_id = req_data.get("billing_address_id")
-        user_exists = Buyers.get_by_email(_email)
+        user_exists = Users.get_by_email(_email)
         if user_exists:
-            return {"success": False,
-                    "msg": f"Email({_email}) already taken"}, 400
+            return {"success": False, "msg": f"Email({_email}) already taken"}, 400
 
-        new_user = Buyers(email=_email, first_name=_first_name, age=_age,
-                          home_address_id=_home_address_id,
-                          billing_address_id=_billing_address_id
-                          )
+        new_user = Users(
+            email=_email,
+            first_name=_first_name,
+            age=_age,
+            home_address_id=_home_address_id,
+            billing_address_id=_billing_address_id,
+        )
 
         # hashed password
         new_user.set_password(_password)
@@ -115,7 +114,7 @@ class Login(Resource):
 
         user_exists.save()
 
-        return {"success": True,   "user": user_exists.toJSON()}, 200
+        return {"success": True, "user": user_exists.toJSON()}, 200
 
 
 @rest_api.route("/api/users/edit")

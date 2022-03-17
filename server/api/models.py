@@ -1,8 +1,5 @@
-
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-
 
 db = SQLAlchemy()
 
@@ -10,11 +7,11 @@ db = SQLAlchemy()
 
 
 class Address(db.Model):
-    __tablename__ = 'Address'
+    __tablename__ = "Address"
     address_ID = db.Column(db.String, primary_key=True)
-    zipcode = db.Column(db.String)
-    street_num = db.Column(db.String)
-    street_name = db.Column(db.String)
+    zipcode = db.Column(db.String, nullable=False)
+    street_num = db.Column(db.String, nullable=False)
+    street_name = db.Column(db.String, nullable=False)
 
     def save(self):
         db.session.add(self)
@@ -25,10 +22,13 @@ class Address(db.Model):
 
 
 class Users(db.Model):
-    __abstract__ = True
+    __tablename__ = "Users"
 
-    email = db.Column(db.String(64), nullable=False,  primary_key=True)
-    password = db.Column(db.Text())
+    email = db.Column(db.String, nullable=False, primary_key=True)
+    password = db.Column(db.Text)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
 
     def __repr__(self):
         return f"user Email {self.email}"
@@ -63,67 +63,89 @@ class Users(db.Model):
 
 class Buyers(Users):
     __tablename__ = "Buyers"
-
-    first_name = db.Column(db.String(64), nullable=False)
-    last_name = db.Column(db.String(64))
-    gender = db.Column(db.String(64))
+    email = db.Column(db.ForeignKey("Users.email"), primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String)
+    gender = db.Column(db.String)
     age = db.Column(db.Integer, nullable=False)
-    
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
     # FK
-    home_address_id = db.Column(
-        db.String, db.ForeignKey('Address.address_ID'))
-    billing_address_id = db.Column(
-        db.String, db.ForeignKey('Address.address_ID'))
+    home_address_id = db.Column(db.ForeignKey("Address.address_ID"))
+    billing_address_id = db.Column(db.ForeignKey("Address.address_ID"))
 
     # relationship
-    home_address = db.relationship(
-        "Address", foreign_keys=[home_address_id])
-    billing_address = db.relationship(
-        "Address", foreign_keys=[billing_address_id])
+    home_address = db.relationship("Address", foreign_keys=[home_address_id])
+    billing_address = db.relationship("Address", foreign_keys=[billing_address_id])
 
     def __repr__(self):
         return f"buyers email {self.email} {self.first_name, self.last_name}"
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
+
+class Sellers(Users):
+    __tablename__ = "Sellers"
+    email = db.Column(db.ForeignKey("Users.email"), primary_key=True)
+    routing_number = db.Column(db.String)
+    account_number = db.Column(db.String)
+    balance = db.Column(db.Float, default=0.0)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+
+    def __repr__(self):
+        return f"sellers email {self.email} {self.first_name, self.last_name}"
 
 
-# class Sellers(Buyers):
-#     routing_number = db.Column()
-#     account_number = db.Column()
-#     balance = db.Column()
+class Local_Vendor(Sellers):
+    __tablename__ = "Local_Vendor"
+    email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
+    business_name = db.Column(db.String, nullable=False)
+    customer_service_number = db.Column(db.String, nullable=False)
+    __mapper_args__ = {
+        "polymorphic_identity": __tablename__,
+    }
+    # FK
+    business_address_ID = db.Column(db.ForeignKey("Address.address_ID"))
 
-#     def __repr__(self):
-#         return f"sellers email {self.email} \nname {self.first_name, self.last_name}"
+    # relationship
+    business_address = db.relationship("Address", foreign_keys=[business_address_ID])
 
+    def __repr__(self):
+        return f"Local_Vendor email {self.email} {self.first_name, self.last_name}"
 
-# class Local_Vendor(Sellers):
-#     business_name = db.Column()
-#     customer_service_number = db.Column()
-#     business_address_ID = db.Column()
-
-#     def __repr__(self):
-#         return f"Local_Vendor email {self.email} \nname {self.first_name, self.last_name}"
 
 # -----------------------------------------------------------------------------------
 
 
-# class Product_Listings(db.Model):
-#     seller_email = db.Column()
-#     listing_id = db.Column()
-#     category = db.Column()
-#     title = db.Column()
-#     product_name = db.Column()
-#     product_description = db.Column()
-#     price = db.Column()
-#     quantity = db.Column()
+class Categories(db.Model):
+    __tablename__ = "Categories"
+    parent_category = db.Column(db.ForeignKey("Categories.category_name"))
+    category_name = db.Column(db.String, primary_key=True)
+
+    def __repr__(self):
+        return f"Categories parent {self.parent_category}, name {self.category_name}"
 
 
-# class Categories(db.Model):
+class Product_Listings(db.Model):
+    __tablename__ = "Product_Listings"
 
-#     parent_category = db.Column()
-#     category_name = db.Column()
+    seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
+    listing_id = db.Column(db.String, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    product_name = db.Column(db.String, nullable=False)
+    product_description = db.Column(db.Text)
+    price = db.Column(db.Float)
+    quantity = db.Column(db.Integer)
+
+    # FK
+    category = db.Column(db.ForeignKey("Categories.category_name"))
+
+    # relationship
+    category_relationship = db.relationship("Categories", foreign_keys=[category])
+
+    def __repr__(self):
+        return f"Product_Listings seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
 
 
 # class Orders(db.Model):
