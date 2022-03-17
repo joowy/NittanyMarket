@@ -4,6 +4,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+import os
 from api import app, db
 
 
@@ -14,5 +15,8 @@ def make_shell_context():
             }
 
 
+HOST = os.environ.get("FLASK_HOST")
+PORT = os.environ.get("FLASK_PORT")
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(host=HOST, port=int(PORT), debug=True)

@@ -1,28 +1,21 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
-from datetime import datetime
-
-import json
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.declarative import DeclarativeMeta
+
 
 db = SQLAlchemy()
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(32), nullable=False)
-    email = db.Column(db.String(64), nullable=False)
+    __abstract__ = True
+
+    email = db.Column(db.String(64), nullable=False,  primary_key=True)
     password = db.Column(db.Text())
-    jwt_auth_active = db.Column(db.Boolean())
-    date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
 
     def __repr__(self):
-        return f"User {self.username}"
+        return f"Email {self.email}"
 
     def save(self):
         db.session.add(self)
@@ -37,19 +30,6 @@ class Users(db.Model):
     def update_email(self, new_email):
         self.email = new_email
 
-    def update_username(self, new_username):
-        self.username = new_username
-
-    def check_jwt_auth_active(self):
-        return self.jwt_auth_active
-
-    def set_jwt_auth_active(self, set_status):
-        self.jwt_auth_active = set_status
-
-    @classmethod
-    def get_by_id(cls, id):
-        return cls.query.get_or_404(id)
-
     @classmethod
     def get_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
@@ -57,25 +37,66 @@ class Users(db.Model):
     def toDICT(self):
 
         cls_dict = {}
-        cls_dict['_id'] = self.id
-        cls_dict['username'] = self.username
-        cls_dict['email'] = self.email
+        cls_dict["email"] = self.email
 
         return cls_dict
 
     def toJSON(self):
-
         return self.toDICT()
 
 
-class JWTTokenBlocklist(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    jwt_token = db.Column(db.String(), nullable=False)
-    created_at = db.Column(db.DateTime(), nullable=False)
+class Buyers(Users):
+    __tablename__ = "Buyers"
+
+    first_name = db.Column(db.String(64), nullable=False)
+    last_name = db.Column(db.String(64))
+    gender = db.Column(db.String(64))
+    age = db.Column(db.Integer(), nullable=False)
+    home_address_id = db.Column(db.Integer())
+    billing_address_id = db.Column(db.Integer())
 
     def __repr__(self):
-        return f"Expired Token: {self.jwt_token}"
+        return f"email {self.email} \nname {self.first_name, self.last_name}"
 
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+
+class Credit_Card(db.Model):
+    __tablename__ = 'Credit_Card'
+
+    credit_card_num = db.Column(db.Integer, primary_key=True)
+    card_code = db.Column(db.Integer)
+    expire_month = db.Column(db.String(64))
+    expire_year = db.Column(db.String(64))
+    card_type = db.Column(db.String(64))
+    Owner_email = db.Column(db.Integer, db.ForeignKey('Buyers.email',
+                                                      onupdate='CASCADE',
+                                                      ondelete='CASCADE'),
+                            index=True, nullable=False)
+
+    def __repr__(self):
+        return f"credit_card_num {self.credit_card_num}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class Zipcode_Info(db.Model):
+    zipcode = db.Column(db.String(5), primary_key=True)
+    city = db.Column(db.String(64))
+    state_id = db.Column(db.Integer)
+    population = db.Column(db.Integer)
+    density = db.Column(db.Float)
+    county_name = db.Column(db.String(64))
+    timezone = db.Column(db.String(64))
+
+
+class Address(db.Model):
+    __tablename__ = 'Address'
+    address_ID = db.Column()
+    zipcode = db.Column()
+    street_num = db.Column()
+    street_name = db.Column()
