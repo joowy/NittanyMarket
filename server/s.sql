@@ -1,7 +1,7 @@
 
 SELECT * from  Address; 
-SELECT * from  Users; 
 SELECT * from  Buyers; 
+SELECT * from  Users; 
 SELECT * from  Sellers; 
 SELECT * from  Local_Vendor; 
 SELECT * from  Categories; 
@@ -12,6 +12,7 @@ SELECT * from  Zipcode_Info;
 SELECT * from  Reviews; 
 SELECT * from  Rating; 
 
+SELECT * FROM Users U, Buyers B WHERE U.email = B.email;
  
     
  SELECT name FROM sqlite_master WHERE type = "table";

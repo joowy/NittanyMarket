@@ -3,11 +3,11 @@ import json
 from flask import Flask
 from flask_cors import CORS
 
-from .seed_database import seed_address, seed_buyers, seed_users
+from .seed_database import seed_address, seed_buyers, seed_sellers, seed_users
 
 
 from .routes import rest_api
-from .models import Buyers, Users, db, Address
+from .models import Buyers, Sellers, Users, db, Address
 
 from .config import Config
 
@@ -36,6 +36,8 @@ with app.app_context():
         seed_users()
     if not (Buyers.query.first()):
         seed_buyers()
+    if not (Sellers.query.first()):
+        seed_sellers()
 """
    Custom responses
 """

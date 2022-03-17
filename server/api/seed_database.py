@@ -14,19 +14,21 @@ def seed_address():
     print("seeding address")
     try:
         data = csv.reader(open(address_file, encoding="utf-8-sig"))
+        # skip header row
+        next(data)
         for record in data:
             address_id = record[0]
             zipcode = record[1]
             street_num = record[2]
             street_name = record[3]
-            if zipcode != "zipcode":
-                new_record = Address(
-                    address_ID=address_id,
-                    zipcode=zipcode,
-                    street_num=street_num,
-                    street_name=street_name,
-                )
-                db.session.add(new_record)
+
+            new_record = Address(
+                address_ID=address_id,
+                zipcode=zipcode,
+                street_num=street_num,
+                street_name=street_name,
+            )
+            db.session.add(new_record)
         db.session.commit()
     except Exception as e:
         print("address seed error", e)
@@ -39,14 +41,14 @@ def seed_users():
     print("seeding users")
     try:
         data = csv.reader(open(users_file, encoding="utf-8-sig"))
+        # skip header row
+        next(data)
         for record in data:
             email = record[0]
             password = record[1]
+            new_record = Users(email=email, password=password)
 
-            if email != "email":
-                new_record = Users(email=email, password=password)
-
-                db.session.add(new_record)
+            db.session.add(new_record)
         db.session.commit()
     except Exception as e:
         print("user seed error", e)
@@ -63,27 +65,9 @@ def seed_buyers():
         next(data)
 
         for record in data:
-            email = record[0]
-            first_name = record[1]
-            last_name = record[2]
-            gender = record[3]
-            age = record[4]
-            home_address_id = record[5]
-            billing_address_id = record[6]
+            # do not insert into users table if buyer's user record already exits
+            db.session.execute(db.insert(Buyers, values=record, prefixes=["OR IGNORE"]))
 
-            buyer = db.session.query(Buyers).filter_by(email=email).first()
-            print(buyer)
-            if not buyer:
-                new_record = Buyers(
-                    email=email,
-                    first_name=first_name,
-                    last_name=last_name,
-                    gender=gender,
-                    age=age,
-                    home_address_id=home_address_id,
-                    billing_address_id=billing_address_id,
-                )
-                db.session.add(new_record)
         db.session.commit()
     except Exception as e:
         print("buyer seed error", e)
@@ -96,25 +80,14 @@ def seed_sellers():
     print("seeding sellers")
     try:
         data = csv.reader(open(sellers_file, encoding="utf-8-sig"))
+        # skip header row
+        next(data)
         for record in data:
+            # do not insert into users table if buyer's user record already exits
+            db.session.execute(
+                db.insert(Sellers, values=record, prefixes=["OR IGNORE"])
+            )
 
-            email = record[0]
-            routing_number = record[1]
-            account_number = record[2]
-            balance = record[3]
-
-            if email != "email":
-                new_record = Sellers(
-                    email=email,
-                    first_name=first_name,
-                    last_name=last_name,
-                    gender=gender,
-                    age=age,
-                    home_address_id=home_address_id,
-                    billing_address_id=billing_address_id,
-                )
-
-                db.session.add(new_record)
         db.session.commit()
     except Exception as e:
         print("buyer seed error", e)

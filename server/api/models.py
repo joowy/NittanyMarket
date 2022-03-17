@@ -1,7 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={"autoflush": False})
+
 
 # ---------------------Address-------------------------
 
@@ -19,8 +20,6 @@ class Address(db.Model):
 
 
 # ----------------------USERS---------------------------------------
-
-
 class Users(db.Model):
     __tablename__ = "Users"
 
@@ -120,9 +119,6 @@ class Categories(db.Model):
     __tablename__ = "Categories"
     parent_category = db.Column(db.ForeignKey("Categories.category_name"))
     category_name = db.Column(db.String, primary_key=True)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"Categories parent {self.parent_category}, name {self.category_name}"
@@ -144,9 +140,6 @@ class Product_Listings(db.Model):
 
     # relationship
     category_relationship = db.relationship("Categories", foreign_keys=[category])
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"Product_Listings seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
@@ -162,9 +155,6 @@ class Orders(db.Model):
     buyer_email = db.Column(db.ForeignKey("Buyers.email"), nullable=False)
     seller_email = db.Column(db.ForeignKey("Sellers.email"), nullable=False)
     listing_id = db.Column(db.ForeignKey("Product_Listings.listing_id"), nullable=False)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"buyer_email seller_email listing_id {self.buyer_email,self.seller_email, self.listing_id}"
@@ -182,9 +172,6 @@ class Credit_Card(db.Model):
         db.ForeignKey("Buyers.email", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
     )
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"credit_card_num {self.credit_card_num}"
@@ -204,9 +191,6 @@ class Zipcode_Info(db.Model):
     density = db.Column(db.Float)
     county_name = db.Column(db.String)
     timezone = db.Column(db.String)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"zipcode {self.zipcode}"
@@ -227,9 +211,6 @@ class Reviews(db.Model):
         db.ForeignKey("Product_Listings.listing_id"), primary_key=True
     )
     review_desc = db.Column(db.Text)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"reviews buyer_email seller_email listing_id {self.buyer_email , self.seller_email , self.listing_id }"
@@ -246,9 +227,6 @@ class Rating(db.Model):
     seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
     rating = db.Column(db.Float)
     rating_desc = db.Column(db.Text)
-    __mapper_args__ = {
-        "polymorphic_identity": __tablename__,
-    }
 
     def __repr__(self):
         return f"buyer_email seller_emailrating {self.buyer_email , self.seller_email , self.rating }"
