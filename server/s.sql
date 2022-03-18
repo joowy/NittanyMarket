@@ -13,7 +13,7 @@ SELECT * from  Reviews;
 SELECT * from  Ratings; 
 
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email;
- 
+SELECT * FROM Zipcode_Info WHERE zipcode = 841;
     
  SELECT name FROM sqlite_master WHERE type = "table";
 

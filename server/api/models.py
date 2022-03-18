@@ -74,10 +74,15 @@ class Buyers(Users):
 
     # relationship
     home_address = db.relationship("Address", foreign_keys=[home_address_id])
-    billing_address = db.relationship("Address", foreign_keys=[billing_address_id])
+    billing_address = db.relationship(
+        "Address", foreign_keys=[billing_address_id])
 
     def __repr__(self):
         return f"buyers email {self.email} {self.first_name, self.last_name}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Sellers(Users):
@@ -93,6 +98,10 @@ class Sellers(Users):
     def __repr__(self):
         return f"sellers email {self.email} {self.first_name, self.last_name}"
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class Local_Vendors(Sellers):
     __tablename__ = "Local_Vendors"
@@ -106,7 +115,8 @@ class Local_Vendors(Sellers):
     business_address_ID = db.Column(db.ForeignKey("Address.address_ID"))
 
     # relationship
-    business_address = db.relationship("Address", foreign_keys=[business_address_ID])
+    business_address = db.relationship(
+        "Address", foreign_keys=[business_address_ID])
 
     def __repr__(self):
         return f"Local_Vendor email {self.email} {self.first_name, self.last_name}"
@@ -139,17 +149,23 @@ class Product_Listing(db.Model):
     quantity = db.Column(db.Integer)
 
     # relationship
-    category_relationship = db.relationship("Categories", foreign_keys=[category])
+    category_relationship = db.relationship(
+        "Categories", foreign_keys=[category])
 
     def __repr__(self):
         return f"Product_Listing seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Orders(db.Model):
     __tablename__ = "Orders"
     transaction_id = db.Column(db.Integer, primary_key=True)
     seller_email = db.Column(db.ForeignKey("Sellers.email"), nullable=False)
-    listing_id = db.Column(db.ForeignKey("Product_Listing.listing_id"), nullable=False)
+    listing_id = db.Column(db.ForeignKey(
+        "Product_Listing.listing_id"), nullable=False)
     buyer_email = db.Column(db.ForeignKey("Buyers.email"), nullable=False)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
@@ -158,6 +174,10 @@ class Orders(db.Model):
 
     def __repr__(self):
         return f"buyer_email seller_email listing_id {self.buyer_email,self.seller_email, self.listing_id}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Credit_Cards(db.Model):

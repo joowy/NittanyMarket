@@ -83,7 +83,8 @@ def seed_buyers():
 
         for record in data:
             # do not insert into users table if buyer's user record already exits
-            db.session.execute(db.insert(Buyers, values=record, prefixes=["OR IGNORE"]))
+            db.session.execute(
+                db.insert(Buyers, values=record, prefixes=["OR IGNORE"]))
 
         db.session.commit()
     except Exception as e:
@@ -159,15 +160,18 @@ def seed_all():
             next(data)
             for record in data:
                 if table_name == "Product_Listing":
-                    record[6] = record[6].strip("$").replace(",", "").strip('"').strip()
+                    record[6] = record[6].strip("$").replace(
+                        ",", "").strip('"').strip()
 
                 elif table_name == "Orders":
                     record[4] = datetime.strptime(record[4], "%m/%d/%y")
                 elif table_name == "Zipcode_Info":
-                    print(record)
-                    print(db.insert(t, values=record, prefixes=["OR IGNORE"]))
+                    for i in range(len(record)):
+                        if record[i] == '':
+                            record[i] = None
                 # do not insert into users table if buyer's user record already exits
-                db.session.execute(db.insert(t, values=record, prefixes=["OR IGNORE"]))
+                db.session.execute(
+                    db.insert(t, values=record, prefixes=["OR IGNORE"]))
             db.session.commit()
         except Exception as e:
             print(f"{table_name} seed error", e)

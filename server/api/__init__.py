@@ -28,18 +28,10 @@ CORS(app)
 # @app.before_first_request
 # def initialize_database():
 # db.create_all()
-with app.app_context():
-    db.create_all()
-    seed_all()
+# with app.app_context():
+#     db.create_all()
+#     seed_all()
 
-    # if not (Address.query.first()):
-    #     seed_address()
-    # if not (Users.query.first()):
-    #     seed_users()
-    # if not (Buyers.query.first()):
-    #     seed_buyers()
-    # if not (Sellers.query.first()):
-    #     seed_sellers()
 
 """
    Custom responses
