@@ -16,3 +16,4 @@ from .product_listings import Product_Listing
 from .zipcode_info import Zipcode_Info
 from .reviews import Reviews
 from .rating import Ratings
+from .jwttokenblocklist import JWTTokenBlocklist
