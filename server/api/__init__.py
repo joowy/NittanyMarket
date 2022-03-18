@@ -6,7 +6,7 @@ from flask_cors import CORS
 from .seed_database import seed_all
 
 
-from .routes import rest_api
+from .routes.users_route import rest_api
 from .models import Buyers, Sellers, Users, db, Address
 
 from .config import Config
@@ -25,12 +25,12 @@ CORS(app)
 # Setup database
 
 
-# @app.before_first_request
-# def initialize_database():
-# db.create_all()
-with app.app_context():
+@app.before_first_request
+def initialize_database():
     db.create_all()
-    seed_all()
+# with app.app_context():
+#     db.create_all()
+#     seed_all()
 
 
 """
@@ -45,6 +45,7 @@ def after_request(response):
     """
 
     if int(response.status_code) >= 400:
+        print(response.get_data(), "????")
         response_data = json.loads(response.get_data())
         if "errors" in response_data:
             response_data = {

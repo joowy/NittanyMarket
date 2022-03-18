@@ -11,11 +11,14 @@ SELECT * from  Credit_Cards;
 SELECT * from  Zipcode_Info; 
 SELECT * from  Reviews; 
 SELECT * from  Ratings; 
+SELECT * from jwt_token_blocklist; 
 
-SELECT * FROM Users U, Buyers B WHERE U.email = B.email;
+SELECT * FROM Users U, Buyers B WHERE U.email = B.email ;
+SELECT * from Users where email Like "test%";
+
 SELECT * FROM Zipcode_Info WHERE zipcode = 841;
     
- SELECT name FROM sqlite_master WHERE type = "table";
+SELECT name FROM sqlite_master WHERE type = "table";
 
 PRAGMA table_info(Users);
 PRAGMA table_info(Buyers);

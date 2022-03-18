@@ -1,6 +1,6 @@
-## [Nittany Market API Server]
+## Nittany Market API Server
 
-
+templated from https://github.com/app-generator/api-server-flask
 ## Run the code 
 
 

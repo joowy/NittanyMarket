@@ -1,41 +1,40 @@
-from flask import request
-from flask_restx import Api, Resource, fields
-
 from datetime import datetime, timezone, timedelta
-
 from functools import wraps
-from .config import Config
+from flask import request, Blueprint
+
+from flask_restx import Api, Resource, fields
+from api.models import Users, Buyers, JWTTokenBlocklist, db
 import jwt
 
-from .models import (db, Address, Users, Buyers, Sellers, Local_Vendors, Categories,
-                     Product_Listing, Orders, Credit_Cards, Zipcode_Info, Reviews, Ratings, JWTTokenBlocklist)
-
-
-rest_api = Api(version="1.0", title="Users API")
-
-
+from . import rest_api
+from ..config import Config
 """
     Flask-Restx models for api request and response data
 """
 
-signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
-                                              "email": fields.String(required=True, min_length=4, max_length=64),
-                                              "password": fields.String(required=True, min_length=4, max_length=16)
-                                              })
+signup_model = rest_api.model(
+    "SignUpModel",
+    {
+        "email": fields.String(required=True, min_length=4, max_length=120),
+        "password": fields.String(required=True, min_length=4, max_length=16),
+    },
+)
 
-login_model = rest_api.model('LoginModel', {"email": fields.String(required=True, min_length=4, max_length=64),
-                                            "password": fields.String(required=True, min_length=4, max_length=16)
-                                            })
+login_model = rest_api.model(
+    "LoginModel",
+    {
+        "email": fields.String(required=True, min_length=4, max_length=120),
+        "password": fields.String(required=True, min_length=4, max_length=16),
+    },
+)
 
-user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(required=True, min_length=1, max_length=32),
-                                                   "username": fields.String(required=True, min_length=2, max_length=32),
-                                                   "email": fields.String(required=True, min_length=4, max_length=64)
-                                                   })
-
-
-"""
-   Helper function for JWT token required
-"""
+user_edit_model = rest_api.model(
+    "UserEditModel",
+    {
+        "email": fields.String(required=True, min_length=4, max_length=120),
+        "password": fields.String(required=True, min_length=4, max_length=16),
+    },
+)
 
 
 def token_required(f):
@@ -82,7 +81,7 @@ def token_required(f):
 """
 
 
-@rest_api.route('/api/users/register')
+@rest_api.route("/api/users/register")
 class Register(Resource):
     """
        Creates a new user by taking 'signup_model' input
@@ -93,26 +92,32 @@ class Register(Resource):
 
         req_data = request.get_json()
 
-        _username = req_data.get("username")
         _email = req_data.get("email")
         _password = req_data.get("password")
 
         user_exists = Users.get_by_email(_email)
         if user_exists:
-            return {"success": False,
-                    "msg": "Email already taken"}, 400
+            return {"success": False, "msg": f"{_email} is already in use"}, 400
 
-        new_user = Users(username=_username, email=_email)
+        new_user = Users(
+            email=_email,
+        )
 
+        # hashed password
         new_user.set_password(_password)
         new_user.save()
 
-        return {"success": True,
-                "userID": new_user.id,
-                "msg": "The user was successfully registered"}, 200
+        return (
+            {
+                "success": True,
+                "email": new_user.email,
+                "msg": "The user was successfully registered",
+            },
+            200,
+        )
 
 
-@rest_api.route('/api/users/login')
+@rest_api.route("/api/users/login")
 class Login(Resource):
     """
        Login user by taking 'login_model' input and return JWT token
@@ -136,7 +141,7 @@ class Login(Resource):
             return {"success": False,
                     "msg": "Wrong credentials."}, 400
 
-        # create access token uwing JWT
+        # create access token using JWT
         token = jwt.encode({'email': _email, 'exp': datetime.utcnow(
         ) + timedelta(minutes=30)}, Config.SECRET_KEY)
 
@@ -160,11 +165,11 @@ class EditUser(Resource):
 
         req_data = request.get_json()
 
-        _new_username = req_data.get("username")
         _new_email = req_data.get("email")
+        _new_password = req_data.get("password")
 
-        if _new_username:
-            self.update_username(_new_username)
+        if _new_password:
+            self.update_password(_new_password)
 
         if _new_email:
             self.update_email(_new_email)

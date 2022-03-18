@@ -2,27 +2,22 @@
 import os
 import csv
 
-from datetime import date, datetime
-# from api.models import (
-#     db,
-#     Address,
-#     Users,
-#     Buyers,
-#     Sellers,
-#     Local_Vendors,
-#     Categories,
-#     Product_Listing,
-#     Orders,
-#     Credit_Cards,
-#     Zipcode_Info,
-#     Reviews,
-#     Ratings,
-# )
+from datetime import datetime
 
 from .models import(
     db,
     Address,
     Users,
+    Buyers,
+    Sellers,
+    Local_Vendors,
+    Categories,
+    Product_Listing,
+    Orders,
+    Credit_Cards,
+    Zipcode_Info,
+    Reviews,
+    Ratings,
 
 )
 
@@ -34,16 +29,16 @@ def seed_all():
     tables_list = [
         Address,
         Users,
-        # Buyers,
-        # Sellers,
-        # Local_Vendors,
-        # Categories,
-        # Product_Listing,
-        # Orders,
-        # Credit_Cards,
-        # Zipcode_Info,
-        # Reviews,
-        # Ratings,
+        Buyers,
+        Sellers,
+        Local_Vendors,
+        Categories,
+        Product_Listing,
+        Orders,
+        Credit_Cards,
+        Zipcode_Info,
+        Reviews,
+        Ratings,
     ]
 
     table_name = None
@@ -54,6 +49,7 @@ def seed_all():
             data = csv.reader(open(file, encoding="cp1252"))
             # skip header row
             next(data)
+            print(f"seeding {table_name}")
             for record in data:
                 if table_name == "Product_Listing":
                     # prices are strings starting with $
