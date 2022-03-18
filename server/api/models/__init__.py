@@ -1,18 +1,18 @@
 
 
+from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-from .rating import Ratings
-from .reviews import Reviews
-from .zipcode_info import Zipcode_Info
-from .product_listings import Credit_Cards
-from .credit_card import Orders
-from .orders import Product_Listing
-from .categories import Categories
-from .local_vendors import Local_Vendors
-from .sellers import Sellers
-from .buyers import Buyers
-from .users import Users
 from .address import Address
-from flask_sqlalchemy import SQLAlchemy
+from .users import Users
+from .buyers import Buyers
+from .sellers import Sellers
+from .local_vendors import Local_Vendors
+from .categories import Categories
+from .orders import Orders
+from .credit_card import Credit_Cards
+from .product_listings import Product_Listing
+from .zipcode_info import Zipcode_Info
+from .reviews import Reviews
+from .rating import Ratings

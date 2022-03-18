@@ -3,22 +3,28 @@ import os
 import csv
 
 from datetime import date, datetime
-from api.models import (
+# from api.models import (
+#     db,
+#     Address,
+#     Users,
+#     Buyers,
+#     Sellers,
+#     Local_Vendors,
+#     Categories,
+#     Product_Listing,
+#     Orders,
+#     Credit_Cards,
+#     Zipcode_Info,
+#     Reviews,
+#     Ratings,
+# )
+
+from .models import(
     db,
     Address,
     Users,
-    Buyers,
-    Sellers,
-    Local_Vendors,
-    Categories,
-    Product_Listing,
-    Orders,
-    Credit_Cards,
-    Zipcode_Info,
-    Reviews,
-    Ratings,
-)
 
+)
 
 file_path = os.path.dirname(os.path.realpath(__file__))
 mock_data_dir = os.path.join(file_path, "mock")
@@ -28,16 +34,16 @@ def seed_all():
     tables_list = [
         Address,
         Users,
-        Buyers,
-        Sellers,
-        Local_Vendors,
-        Categories,
-        Product_Listing,
-        Orders,
-        Credit_Cards,
-        Zipcode_Info,
-        Reviews,
-        Ratings,
+        # Buyers,
+        # Sellers,
+        # Local_Vendors,
+        # Categories,
+        # Product_Listing,
+        # Orders,
+        # Credit_Cards,
+        # Zipcode_Info,
+        # Reviews,
+        # Ratings,
     ]
 
     table_name = None
