@@ -1,7 +1,36 @@
-# Getting Started with Create React App
+# Nittany Market Front-end
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Run the code
+
+> **Step #** - install dependencies
+
+```bash
+$ npm install
+```
+
+<br />
+
+> **Step #** - set environment variables 
+
+```bash
+$  cp .env.example .env
+```
+In .env
+```
+
+```
+
+<br />
+
+> **Step #** - run project on localhost
+
+```bash
+$ npm start
+```
+
+<br />
 ## Available Scripts
 
 In the project directory, you can run:
