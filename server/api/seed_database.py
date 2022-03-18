@@ -1,5 +1,22 @@
 # from api import app
-from api.models import Users, Buyers, Address, db, Sellers
+from datetime import date, datetime
+from api.models import (
+    db,
+    Address,
+    Users,
+    Buyers,
+    Sellers,
+    Local_Vendors,
+    Categories,
+    Product_Listing,
+    Orders,
+    Credit_Cards,
+    Zipcode_Info,
+    Reviews,
+    Ratings,
+)
+
+
 import os
 import csv
 
@@ -92,6 +109,69 @@ def seed_sellers():
     except Exception as e:
         print("buyer seed error", e)
         db.session.rollback()
+
+
+def seed_categories():
+    # with app.app_context():
+    categories_file = os.path.join(mock_data_dir, "Categories.csv")
+    print("seeding categories")
+    try:
+        data = csv.reader(open(categories_file, encoding="utf-8-sig"))
+        # skip header row
+        next(data)
+        for record in data:
+            # do not insert into users table if buyer's user record already exits
+            db.session.execute(
+                db.insert(Categories, values=record, prefixes=["OR IGNORE"])
+            )
+
+        db.session.commit()
+    except Exception as e:
+        print("buyer seed error", e)
+        db.session.rollback()
+
+
+def seed_all():
+
+    tables_list = [
+        Address,
+        Users,
+        Buyers,
+        Sellers,
+        Local_Vendors,
+        Categories,
+        Product_Listing,
+        Orders,
+        Credit_Cards,
+        Zipcode_Info,
+        Reviews,
+        Ratings,
+    ]
+    table_name = None
+    for t in tables_list:
+        table_name = t.__tablename__
+        file = os.path.join(mock_data_dir, f"{table_name}.csv")
+        # print("seeding categories")
+        try:
+            data = csv.reader(open(file, encoding="cp1252"))
+            # print(data)
+            # skip header row
+            next(data)
+            for record in data:
+                if table_name == "Product_Listing":
+                    record[6] = record[6].strip("$").replace(",", "").strip('"').strip()
+
+                elif table_name == "Orders":
+                    record[4] = datetime.strptime(record[4], "%m/%d/%y")
+                elif table_name == "Zipcode_Info":
+                    print(record)
+                    print(db.insert(t, values=record, prefixes=["OR IGNORE"]))
+                # do not insert into users table if buyer's user record already exits
+                db.session.execute(db.insert(t, values=record, prefixes=["OR IGNORE"]))
+            db.session.commit()
+        except Exception as e:
+            print(f"{table_name} seed error", e)
+            db.session.rollback()
 
 
 # if __name__ == '__main__':

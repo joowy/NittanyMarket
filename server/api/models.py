@@ -94,8 +94,8 @@ class Sellers(Users):
         return f"sellers email {self.email} {self.first_name, self.last_name}"
 
 
-class Local_Vendor(Sellers):
-    __tablename__ = "Local_Vendor"
+class Local_Vendors(Sellers):
+    __tablename__ = "Local_Vendors"
     email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
     business_name = db.Column(db.String, nullable=False)
     customer_service_number = db.Column(db.String, nullable=False)
@@ -124,44 +124,44 @@ class Categories(db.Model):
         return f"Categories parent {self.parent_category}, name {self.category_name}"
 
 
-class Product_Listings(db.Model):
-    __tablename__ = "Product_Listings"
+class Product_Listing(db.Model):
+    __tablename__ = "Product_Listing"
 
     seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
     listing_id = db.Column(db.String, primary_key=True)
+    # FK
+    category = db.Column(db.ForeignKey("Categories.category_name"))
+
     title = db.Column(db.String, nullable=False)
-    product_name = db.Column(db.String, nullable=False)
+    product_name = db.Column(db.String)
     product_description = db.Column(db.Text)
     price = db.Column(db.Float)
     quantity = db.Column(db.Integer)
-
-    # FK
-    category = db.Column(db.ForeignKey("Categories.category_name"))
 
     # relationship
     category_relationship = db.relationship("Categories", foreign_keys=[category])
 
     def __repr__(self):
-        return f"Product_Listings seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
+        return f"Product_Listing seller_email listing_id {self.seller_email,self.listing_id, self.product_name}"
 
 
 class Orders(db.Model):
     __tablename__ = "Orders"
     transaction_id = db.Column(db.Integer, primary_key=True)
+    seller_email = db.Column(db.ForeignKey("Sellers.email"), nullable=False)
+    listing_id = db.Column(db.ForeignKey("Product_Listing.listing_id"), nullable=False)
+    buyer_email = db.Column(db.ForeignKey("Buyers.email"), nullable=False)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
     payment = db.Column(db.Float)
     # FK
-    buyer_email = db.Column(db.ForeignKey("Buyers.email"), nullable=False)
-    seller_email = db.Column(db.ForeignKey("Sellers.email"), nullable=False)
-    listing_id = db.Column(db.ForeignKey("Product_Listings.listing_id"), nullable=False)
 
     def __repr__(self):
         return f"buyer_email seller_email listing_id {self.buyer_email,self.seller_email, self.listing_id}"
 
 
-class Credit_Card(db.Model):
-    __tablename__ = "Credit_Card"
+class Credit_Cards(db.Model):
+    __tablename__ = "Credit_Cards"
 
     credit_card_num = db.Column(db.String, primary_key=True)
     card_code = db.Column(db.Integer, nullable=False,)
@@ -205,10 +205,10 @@ class Reviews(db.Model):
 
     buyer_email = db.Column(db.ForeignKey("Buyers.email"), primary_key=True)
     seller_email = db.Column(
-        db.ForeignKey("Product_Listings.seller_email"), primary_key=True
+        db.ForeignKey("Product_Listing.seller_email"), primary_key=True
     )
     listing_id = db.Column(
-        db.ForeignKey("Product_Listings.listing_id"), primary_key=True
+        db.ForeignKey("Product_Listing.listing_id"), primary_key=True
     )
     review_desc = db.Column(db.Text)
 
@@ -220,8 +220,8 @@ class Reviews(db.Model):
         db.session.commit()
 
 
-class Rating(db.Model):
-    __tablename__ = "Rating"
+class Ratings(db.Model):
+    __tablename__ = "Ratings"
 
     buyer_email = db.Column(db.ForeignKey("Buyers.email"), primary_key=True)
     seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)

@@ -3,14 +3,14 @@ SELECT * from  Address;
 SELECT * from  Buyers; 
 SELECT * from  Users; 
 SELECT * from  Sellers; 
-SELECT * from  Local_Vendor; 
+SELECT * from  Local_Vendors; 
 SELECT * from  Categories; 
-SELECT * from  Product_Listings; 
+SELECT * from  Product_Listing; 
 SELECT * from  Orders; 
-SELECT * from  Credit_Card; 
+SELECT * from  Credit_Cards; 
 SELECT * from  Zipcode_Info; 
 SELECT * from  Reviews; 
-SELECT * from  Rating; 
+SELECT * from  Ratings; 
 
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email;
  
