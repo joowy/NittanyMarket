@@ -1,3 +1,8 @@
+
+
+db = SQLAlchemy()
+
+
 from .rating import Ratings
 from .reviews import Reviews
 from .zipcode_info import Zipcode_Info
@@ -11,6 +16,3 @@ from .buyers import Buyers
 from .users import Users
 from .address import Address
 from flask_sqlalchemy import SQLAlchemy
-
-
-db = SQLAlchemy()
