@@ -81,7 +81,7 @@ def token_required(f):
 """
 
 
-@rest_api.route("/api/users/register")
+@rest_api.route("/api/auth/register")
 class Register(Resource):
     """
        Creates a new user by taking 'signup_model' input
@@ -117,7 +117,7 @@ class Register(Resource):
         )
 
 
-@rest_api.route("/api/users/login")
+@rest_api.route("/api/auth/login")
 class Login(Resource):
     """
        Login user by taking 'login_model' input and return JWT token
@@ -153,7 +153,7 @@ class Login(Resource):
                 "user": user_exists.toJSON()}, 200
 
 
-@rest_api.route('/api/users/edit')
+@rest_api.route('/api/auth/edit')
 class EditUser(Resource):
     """
        Edits User's username or password or both using 'user_edit_model' input
@@ -179,7 +179,7 @@ class EditUser(Resource):
         return {"success": True}, 200
 
 
-@rest_api.route('/api/users/logout')
+@rest_api.route('/api/auth/logout')
 class LogoutUser(Resource):
     """
        Logs out User using 'logout_model' input

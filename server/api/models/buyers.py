@@ -10,7 +10,7 @@ class Buyers(Users):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     gender = db.Column(db.String)
-    age = db.Column(db.Integer, nullable=False)
+    age = db.Column(db.Integer)
     __mapper_args__ = {
         "polymorphic_identity": __tablename__,
     }

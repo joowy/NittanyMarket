@@ -14,7 +14,7 @@ SELECT * from  Ratings;
 SELECT * from jwt_token_blocklist; 
 
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email ;
-SELECT * from Users where email Like "test%";
+SELECT * from Users where email Like "tes%";
 
  
 

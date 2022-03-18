@@ -1,7 +1,7 @@
 # from api import app
 import os
 import csv
-
+from werkzeug.security import generate_password_hash
 from datetime import datetime
 
 from .models import(
@@ -51,7 +51,11 @@ def seed_all():
             next(data)
             print(f"seeding {table_name}")
             for record in data:
-                if table_name == "Product_Listing":
+                if table_name == "Users":
+                    # run hash on password
+                    record[1] = generate_password_hash(record[1])
+
+                elif table_name == "Product_Listing":
                     # prices are strings starting with $
                     record[6] = record[6].strip("$").replace(
                         ",", "").strip('"').strip()
@@ -67,7 +71,6 @@ def seed_all():
                     db.insert(table, values=record,
                               # handle table heirachy
                               prefixes=["OR IGNORE"]))
-
             db.session.commit()
         except Exception as e:
             print(f"{table_name} seed error", e)
