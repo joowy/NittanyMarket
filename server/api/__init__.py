@@ -3,7 +3,7 @@ import json
 from flask import Flask
 from flask_cors import CORS
 
-from .seed_database import seed_address, seed_buyers, seed_sellers, seed_users, seed_all
+from .seed_database import seed_all
 
 
 from .routes import rest_api

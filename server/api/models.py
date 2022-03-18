@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(session_options={"autoflush": False})
+db = SQLAlchemy( )
 
 
 # ---------------------Address-------------------------
@@ -17,9 +17,9 @@ class Address(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
-
-
 # ----------------------USERS---------------------------------------
+
+
 class Users(db.Model):
     __tablename__ = "Users"
 
@@ -59,7 +59,8 @@ class Users(db.Model):
 
 class Buyers(Users):
     __tablename__ = "Buyers"
-    email = db.Column(db.ForeignKey("Users.email"), primary_key=True)
+    email = db.Column(db.ForeignKey(
+        "Users.email", onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     gender = db.Column(db.String)
@@ -87,7 +88,8 @@ class Buyers(Users):
 
 class Sellers(Users):
     __tablename__ = "Sellers"
-    email = db.Column(db.ForeignKey("Users.email"), primary_key=True)
+    email = db.Column(db.ForeignKey(
+        "Users.email", onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
     routing_number = db.Column(db.String)
     account_number = db.Column(db.String)
     balance = db.Column(db.Float, default=0.0)
@@ -105,7 +107,8 @@ class Sellers(Users):
 
 class Local_Vendors(Sellers):
     __tablename__ = "Local_Vendors"
-    email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
+    email = db.Column(db.ForeignKey(
+        "Sellers.email", onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
     business_name = db.Column(db.String, nullable=False)
     customer_service_number = db.Column(db.String, nullable=False)
     __mapper_args__ = {
@@ -137,7 +140,8 @@ class Categories(db.Model):
 class Product_Listing(db.Model):
     __tablename__ = "Product_Listing"
 
-    seller_email = db.Column(db.ForeignKey("Sellers.email"), primary_key=True)
+    seller_email = db.Column(db.ForeignKey(
+        "Sellers.email", onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
     listing_id = db.Column(db.String, primary_key=True)
     # FK
     category = db.Column(db.ForeignKey("Categories.category_name"))
@@ -250,6 +254,19 @@ class Ratings(db.Model):
 
     def __repr__(self):
         return f"buyer_email seller_emailrating {self.buyer_email , self.seller_email , self.rating }"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class JWTTokenBlocklist(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    jwt_token = db.Column(db.String(), nullable=False)
+    created_at = db.Column(db.DateTime(), nullable=False)
+
+    def __repr__(self):
+        return f"Expired Token: {self.jwt_token}"
 
     def save(self):
         db.session.add(self)
