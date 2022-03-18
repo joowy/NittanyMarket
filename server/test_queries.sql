@@ -16,6 +16,8 @@ SELECT * from jwt_token_blocklist;
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email ;
 SELECT * from Users where email Like "test%";
 
+ 
+
 SELECT * FROM Zipcode_Info WHERE zipcode = 841;
     
 SELECT name FROM sqlite_master WHERE type = "table";

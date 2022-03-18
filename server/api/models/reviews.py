@@ -1,12 +1,13 @@
-from . import db 
+from . import db
 
 
 class Reviews(db.Model):
     __tablename__ = "Reviews"
 
-    buyer_email = db.Column(db.ForeignKey("Buyers.email"), primary_key=True)
+    buyer_email = db.Column(db.ForeignKey(
+        "Buyers.email",   onupdate="CASCADE"), primary_key=True)
     seller_email = db.Column(
-        db.ForeignKey("Product_Listing.seller_email"), primary_key=True
+        db.ForeignKey("Product_Listing.seller_email",   onupdate="CASCADE"), primary_key=True
     )
     listing_id = db.Column(
         db.ForeignKey("Product_Listing.listing_id"), primary_key=True
