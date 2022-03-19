@@ -1,13 +1,14 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import wraps
-from flask import request, Blueprint
 
-from flask_restx import Api, Resource, fields
-from api.models import Users, Buyers, JWTTokenBlocklist, db
 import jwt
+from api.models import Buyers, JWTTokenBlocklist, Users, db
+from flask import Blueprint, request
+from flask_restx import Api, Resource, fields
 
-from . import rest_api
 from ..config import Config
+from . import rest_api
+
 """
     Flask-Restx models for api request and response data
 """
@@ -117,7 +118,7 @@ class Register(Resource):
         )
 
 
-@rest_api.route("/api/auth/login")
+@rest_api.route("/api/auth/login", methods=['POST'])
 class Login(Resource):
     """
        Login user by taking 'login_model' input and return JWT token
@@ -134,10 +135,12 @@ class Login(Resource):
         user_exists = Users.get_by_email(_email)
 
         if not user_exists:
+
             return {"success": False,
                     "msg": "This email does not exist."}, 400
 
         if not user_exists.check_password(_password):
+
             return {"success": False,
                     "msg": "Wrong credentials."}, 400
 

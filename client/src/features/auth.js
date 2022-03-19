@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/user.service";
+import { axiosClient as axios } from "../api/axios.config";
 
 const userData = JSON.parse(localStorage.getItem("user"));
 export const register = createAsyncThunk(
@@ -11,30 +12,25 @@ export const register = createAsyncThunk(
       return response.data;
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.msg ||
         error.toString();
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const login = createAsyncThunk(
   "auth/login",
-
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(email, password);
       return { userData: data };
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.msg ||
         error.toString();
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

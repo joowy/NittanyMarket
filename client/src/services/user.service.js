@@ -5,17 +5,20 @@ const register = (email, password) => {
     password,
   });
 };
-const login = (email, password) => {
-  console.log(email, password);
+
+const login = async (email, password) => {
+  
   return axios
     .post("auth/login", {
       email,
       password,
     })
     .then((response) => {
+      console.log(response);
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
+
       return response.data;
     });
 };

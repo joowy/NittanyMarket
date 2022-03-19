@@ -25,7 +25,6 @@ const theme = createTheme();
 export const Login = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  // @ts-ignore
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const handleSubmit = (event) => {
@@ -37,19 +36,18 @@ export const Login = () => {
       password: data.get("password"),
       //   email: "arubertelli0@nsu.edu",
       //   password: "TbIF16hoUqGl",
-      //   email: "test@test.com",
-      //   password: "pass",
+      // email: "test@test.com",
+      // password: "pass",
     };
 
-    // @ts-ignore
     dispatch(login({ email, password }))
-      // @ts-ignore
       .unwrap()
       .then(() => {
         window.location.reload();
       })
       .catch((e) => {
-        alert("incorrect credentials");
+        console.log(e);
+        alert(e);
         setLoading(false);
       });
   };
