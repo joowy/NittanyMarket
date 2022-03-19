@@ -1,17 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/user.service";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const userData = JSON.parse(localStorage.getItem("user"));
 export const register = createAsyncThunk(
   "auth/register",
-  //@ts-ignore
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await AuthService.register(email, password);
 
       return response.data;
     } catch (error) {
-      // @ts-ignore
       const message =
         (error.response &&
           error.response.data &&
@@ -25,13 +23,11 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk(
   "auth/login",
 
-  // @ts-ignore
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(email, password);
-      return { user: data };
+      return { userData: data };
     } catch (error) {
-      // @ts-ignore
       const message =
         (error.response &&
           error.response.data &&
@@ -45,35 +41,32 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   await AuthService.logout();
 });
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+const initialState = userData
+  ? { isLoggedIn: true, userData }
+  : { isLoggedIn: false, userData: null };
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // @ts-ignore
     builder.addCase(register.fulfilled, (state, action) => {
       state.isLoggedIn = false;
     });
-    // @ts-ignore
     builder.addCase(register.rejected, (state, action) => {
       state.isLoggedIn = false;
     });
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoggedIn = true;
-      state.user = action.payload.user;
+      console.log(action.payload);
+      state.userData = action.payload.userData;
     });
-    // @ts-ignore
     builder.addCase(login.rejected, (state, action) => {
       state.isLoggedIn = false;
-      state.user = null;
+      state.userData = null;
     });
-    // @ts-ignore
     builder.addCase(logout.fulfilled, (state, action) => {
       state.isLoggedIn = false;
-      state.user = null;
+      state.userData = null;
     });
   },
 });

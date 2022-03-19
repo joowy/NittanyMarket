@@ -1,10 +1,15 @@
 import { AppBar, Box, Button, IconButton, Typography } from "@mui/material";
 import { orange } from "@mui/material/colors";
-import { Login } from "pages/Login";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { theme } from "theme";
+import { LoginButton } from "./LoginButton";
+import { UserButton } from "./UserButton";
 export const TopAppBar = () => {
+  // @ts-ignore
+  const { isLoggedIn } = useSelector((state) => state.auth);
   return (
     <AppBar>
       <Box display={"flex"}>
@@ -36,15 +41,7 @@ export const TopAppBar = () => {
         </IconButton>
 
         <Box sx={{ flexGrow: 1 }} />
-        <Button
-          color="info"
-          variant="outlined"
-          sx={{ marginInline: 1, fontWeight: "bold", margin: 1 }}
-          component={Link}
-          to="/login"
-        >
-          Log In
-        </Button>
+        {isLoggedIn ? <UserButton /> : <LoginButton />}
       </Box>
     </AppBar>
   );

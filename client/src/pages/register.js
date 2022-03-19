@@ -12,13 +12,16 @@ import Typography from "@mui/material/Typography";
 import { register } from "features/auth";
 import React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export const Register = () => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -29,19 +32,19 @@ export const Register = () => {
 
     const { email, password } = object;
 
-    // @ts-ignore
     dispatch(register({ email, password }))
-      // @ts-ignore
       .unwrap()
       .then((x) => {
         console.log(x);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch(() => {
         setLoading(false);
       });
   };
-
+  if (isLoggedIn) {
+    return <Navigate to="/" />;
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

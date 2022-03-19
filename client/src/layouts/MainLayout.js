@@ -1,11 +1,16 @@
 import { Box, CssBaseline } from "@mui/material";
-import { TopAppBar } from "components/TopAppBar";
+import { TopAppBar } from "components/topNavBar/TopAppBar";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
 // import { Header } from "../../components/index";
 
 export const MainLayout = () => {
+  // @ts-ignore
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  console.log(isLoggedIn, "mainlayout");
+
   return (
     <>
       <CssBaseline />
