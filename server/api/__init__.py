@@ -1,3 +1,4 @@
+
 import json
 
 from flask import Flask
@@ -5,6 +6,7 @@ from flask_cors import CORS
 
 from .seed_database import seed_all
 
+from sqlalchemy.sql import text, column
 
 from .routes.users_route import rest_api
 from .models import Buyers, Sellers, Users, db, Address
@@ -22,14 +24,23 @@ CORS(app)
 
 
 # Setup database
-# @app.before_first_request
-# def initialize_database():
-# db.create_all()
 
 
-# with app.app_context():
-#     db.create_all()
-#     seed_all()
+@app.before_first_request
+def initialize_database():
+    db.create_all()
+
+    tables = db.metadata.tables.keys()
+    empty_tables = []
+    # seed table only if table is empty
+    for table_name in tables:
+        for modelClass in db.Model.registry._class_registry.values():
+            if hasattr(modelClass, '__tablename__') and modelClass.__tablename__ == table_name:
+                num_rows = (db.session.query(modelClass).count())
+                if num_rows == 0:
+                    empty_tables.append(modelClass)
+    print(tables, empty_tables)
+    seed_all(tables_list=empty_tables)
 
 
 """

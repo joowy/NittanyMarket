@@ -25,27 +25,13 @@ file_path = os.path.dirname(os.path.realpath(__file__))
 mock_data_dir = os.path.join(file_path, "mock")
 
 
-def seed_all():
-    tables_list = [
-        Address,
-        Users,
-        Buyers,
-        Sellers,
-        Local_Vendors,
-        Categories,
-        Product_Listing,
-        Orders,
-        Credit_Cards,
-        Zipcode_Info,
-        Reviews,
-        Ratings,
-    ]
+def seed_all(tables_list=[Address, Users, Buyers, Sellers, Local_Vendors, Categories, Product_Listing, Orders, Credit_Cards, Zipcode_Info, Reviews, Ratings, ]):
 
     table_name = None
     for table in tables_list:
         table_name = table.__tablename__
-        file = os.path.join(mock_data_dir, f"{table_name}.csv")
         try:
+            file = os.path.join(mock_data_dir, f"{table_name}.csv")
             data = csv.reader(open(file, encoding="cp1252"))
             # skip header row
             next(data)

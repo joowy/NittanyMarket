@@ -11,12 +11,12 @@ SELECT * from  Credit_Cards;
 SELECT * from  Zipcode_Info; 
 SELECT * from  Reviews; 
 SELECT * from  Ratings; 
-SELECT * from jwt_token_blocklist; 
+SELECT * from JWTTokenBlocklist; 
 
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email ;
-SELECT * from Users where email Like "tes%";
+SELECT * from Users where email Like "test%";
 
- 
+ DROP TABLE JWTTokenBlocklist;
 
 SELECT * FROM Zipcode_Info WHERE zipcode = 841;
     
