@@ -1,18 +1,13 @@
-
 import json
 
 from flask import Flask
 from flask_cors import CORS
-
-from .seed_database import seed_all
-
-from sqlalchemy.sql import text, column
-
-from .routes.users_route import rest_api
-from .models import Buyers, Sellers, Users, db, Address
+from sqlalchemy.sql import column, text
 
 from .config import Config
-
+from .models import Address, Buyers, Sellers, Users, db
+from .routes import rest_api
+from .seed_database import seed_all
 
 app = Flask(__name__)
 
@@ -35,11 +30,13 @@ def initialize_database():
     # seed table only if table is empty
     for table_name in tables:
         for modelClass in db.Model.registry._class_registry.values():
-            if hasattr(modelClass, '__tablename__') and modelClass.__tablename__ == table_name:
-                num_rows = (db.session.query(modelClass).count())
+            if (
+                hasattr(modelClass, "__tablename__")
+                and modelClass.__tablename__ == table_name
+            ):
+                num_rows = db.session.query(modelClass).count()
                 if num_rows == 0:
                     empty_tables.append(modelClass)
-    print(tables, empty_tables)
     seed_all(tables_list=empty_tables)
 
 

@@ -1,31 +1,35 @@
-from flask_restx import Namespace, Resource, fields
-
-api = Namespace("users", description="user table operations")
-
-
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta
 from functools import wraps
+from tokenize import String
+from flask import request, Blueprint
 
+from flask_restx import Api, Resource, fields, Namespace
+from api.models import Users, Buyers, JWTTokenBlocklist, db
 import jwt
-from api.models import JWTTokenBlocklist, Users, db
-from flask import request
+
 
 from ..config import Config
+
+api = Namespace("Buyers", description="buyers table")
 
 """
     Flask-Restx models for api request and response data
 """
 
 signup_model = api.model(
-    "SignUpModel",
+    "BuyerSignUpModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
+        "first_name": fields.String(required=True, min_length=1, max_length=16),
+        "last_name": fields.String,
+        "gender": fields.String,
+        "age": fields.Integer(min=0),
     },
 )
 
 login_model = api.model(
-    "LoginModel",
+    "BuyerLoginModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
@@ -33,10 +37,13 @@ login_model = api.model(
 )
 
 user_edit_model = api.model(
-    "UserEditModel",
+    "BuyerUserEditModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
+        "first_name": fields.String(required=True, min_length=1, max_length=16),
+        "last_name": fields.String,
+        "gender": fields.String,
     },
 )
 
@@ -91,7 +98,7 @@ def token_required(f):
 """
 
 
-@api.route("/api/auth/register")
+@api.route("/register")
 class Register(Resource):
     """
        Creates a new user by taking 'signup_model' input
@@ -105,6 +112,11 @@ class Register(Resource):
         _email = req_data.get("email")
         _password = req_data.get("password")
 
+        _first_name = req_data.get("first_name")
+        _last_name = req_data.get("last_name")
+        _gender = req_data.get("gender")
+        _age = req_data.get("age")
+
         user_exists = Users.get_by_email(_email)
         if user_exists:
             return {"success": False, "msg": f"{_email} is already in use"}, 400
@@ -115,17 +127,28 @@ class Register(Resource):
         new_user.set_password(_password)
         new_user.save()
 
+        # create buyer record
+        new_buyer = db.session.execute(
+            db.insert(
+                Buyers,
+                values=[_email, _first_name, _last_name, _gender, _age,],
+                # handle table heirachy
+                prefixes=["OR IGNORE"],
+            )
+        )
+        db.session.commit()
+
         return (
             {
                 "success": True,
                 "email": new_user.email,
-                "msg": "The user was successfully registered",
+                "msg": "The user-buyer was successfully registered",
             },
             200,
         )
 
 
-@api.route("/api/auth/login", methods=["POST"])
+@api.route("/login")
 class Login(Resource):
     """
        Login user by taking 'login_model' input and return JWT token
@@ -142,11 +165,9 @@ class Login(Resource):
         user_exists = Users.get_by_email(_email)
 
         if not user_exists:
-
             return {"success": False, "msg": "This email does not exist."}, 400
 
         if not user_exists.check_password(_password):
-
             return {"success": False, "msg": "Wrong credentials."}, 400
 
         # create access token using JWT
@@ -161,7 +182,7 @@ class Login(Resource):
         return {"success": True, "token": token, "user": user_exists.toJSON()}, 200
 
 
-@api.route("/api/auth/edit")
+@api.route("/edit")
 class EditUser(Resource):
     """
        Edits User's username or password or both using 'user_edit_model' input
@@ -187,7 +208,7 @@ class EditUser(Resource):
         return {"success": True}, 200
 
 
-@api.route("/api/auth/logout")
+@api.route("/logout")
 class LogoutUser(Resource):
     """
        Logs out User using 'logout_model' input

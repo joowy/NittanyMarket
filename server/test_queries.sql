@@ -14,9 +14,9 @@ SELECT * from  Ratings;
 SELECT * from JWTTokenBlocklist; 
 
 SELECT * FROM Users U, Buyers B WHERE U.email = B.email ;
+DELETE FROM Users where email Like "test%";
 SELECT * from Users where email Like "test%";
-
- DROP TABLE JWTTokenBlocklist;
+DROP TABLE JWTTokenBlocklist;
 
 SELECT * FROM Zipcode_Info WHERE zipcode = 841;
     

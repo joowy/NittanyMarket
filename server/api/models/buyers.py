@@ -1,12 +1,13 @@
-
 from . import db
 from .users import Users
 
 
 class Buyers(Users):
     __tablename__ = "Buyers"
-    email = db.Column(db.ForeignKey(
-        "Users.email", onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
+    email = db.Column(
+        db.ForeignKey("Users.email", onupdate="CASCADE", ondelete="CASCADE"),
+        primary_key=True,
+    )
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     gender = db.Column(db.String)
@@ -21,8 +22,7 @@ class Buyers(Users):
 
     # relationship
     home_address = db.relationship("Address", foreign_keys=[home_address_id])
-    billing_address = db.relationship(
-        "Address", foreign_keys=[billing_address_id])
+    billing_address = db.relationship("Address", foreign_keys=[billing_address_id])
 
     def __repr__(self):
         return f"buyers email {self.email} {self.first_name, self.last_name}"
