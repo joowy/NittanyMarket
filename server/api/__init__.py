@@ -24,20 +24,7 @@ CORS(app)
 @app.before_first_request
 def initialize_database():
     db.create_all()
-
-    tables = db.metadata.tables.keys()
-    empty_tables = []
-    # seed table only if table is empty
-    for table_name in tables:
-        for modelClass in db.Model.registry._class_registry.values():
-            if (
-                hasattr(modelClass, "__tablename__")
-                and modelClass.__tablename__ == table_name
-            ):
-                num_rows = db.session.query(modelClass).count()
-                if num_rows == 0:
-                    empty_tables.append(modelClass)
-    seed_all(tables_list=empty_tables)
+    seed_all()
 
 
 """

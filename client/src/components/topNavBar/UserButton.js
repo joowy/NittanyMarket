@@ -53,6 +53,11 @@ export const UserButton = () => {
             Log Out
           </a>
         </MenuItem>
+        <MenuItem>
+          <a href="/login" onClick={logOut}>
+            Profile 
+          </a>
+        </MenuItem>
       </Menu>
     </>
   );

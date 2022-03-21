@@ -1,4 +1,4 @@
-import { Register } from "pages/register";
+import { Register } from "pages/Register";
 import React from "react";
 import { MainLayout } from "./layouts/MainLayout";
 import { Login } from "./pages/Login";

@@ -24,9 +24,13 @@ class Buyers(Users):
     home_address = db.relationship("Address", foreign_keys=[home_address_id])
     billing_address = db.relationship("Address", foreign_keys=[billing_address_id])
 
-    def __repr__(self):
-        return f"buyers email {self.email} {self.first_name, self.last_name}"
+    # def __repr__(self):
+    #     return f"buyers email {self.email} {self.first_name, self.last_name, self.home_address_id}"
 
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()

@@ -49,11 +49,9 @@ export const Register = () => {
     dispatch(register({ age, email, first_name, gender, lastName, password }))
       .unwrap()
       .then((x) => {
-        console.log(x);
         window.location.reload();
       })
       .catch((e) => {
-        console.log(e);
         alert(e);
         setLoading(false);
       });

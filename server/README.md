@@ -41,7 +41,7 @@ $ pip install -r requirements.txt
 ```bash
 $ cp .env.example .env 
 ```
-in .env set variables 
+in .env, set variables 
 ```
 SECRET_KEY= example
 JWT_SECRET_KEY = example

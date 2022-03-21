@@ -10,14 +10,14 @@ import jwt
 
 from ..config import Config
 
-api = Namespace("Buyers", description="buyers table")
+api = Namespace("Auth", description="Authentication for users")
 
 """
     Flask-Restx models for api request and response data
 """
 
 signup_model = api.model(
-    "BuyerSignUpModel",
+    "SignUpModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
@@ -29,7 +29,7 @@ signup_model = api.model(
 )
 
 login_model = api.model(
-    "BuyerLoginModel",
+    "LoginModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
@@ -37,7 +37,7 @@ login_model = api.model(
 )
 
 user_edit_model = api.model(
-    "BuyerUserEditModel",
+    "UserEditModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
         "password": fields.String(required=True, min_length=4, max_length=16),
@@ -116,7 +116,7 @@ class Register(Resource):
         _last_name = req_data.get("last_name")
         _gender = req_data.get("gender")
         _age = int(req_data.get("age"))
-        print(_age)
+
         user_exists = Users.get_by_email(_email)
         if user_exists:
             return {"success": False, "msg": f"{_email} is already in use"}, 400
@@ -128,7 +128,7 @@ class Register(Resource):
         new_user.save()
 
         # create buyer record
-        new_buyer = db.session.execute(
+        db.session.execute(
             db.insert(
                 Buyers,
                 values=[_email, _first_name, _last_name, _gender, _age,],

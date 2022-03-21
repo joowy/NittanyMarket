@@ -10,8 +10,8 @@ class Users(db.Model):
     password = db.Column(db.Text)
     jwt_auth_active = db.Column(db.Boolean())
 
-    def __repr__(self):
-        return f"user Email {self.email}"
+    # def __repr__(self):
+    #     return f"user Email {self.email}"
 
     def save(self):
         db.session.add(self)

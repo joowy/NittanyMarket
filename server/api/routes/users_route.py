@@ -1,42 +1,39 @@
-from flask_restx import Namespace, Resource, fields
-
-api = Namespace("users", description="user table operations")
-
-
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta
 from functools import wraps
+from tokenize import String
+from flask import request, Blueprint
 
+from flask_restx import Resource, fields, Namespace, reqparse
+from api.models import Users, Buyers, JWTTokenBlocklist, db
 import jwt
-from api.models import JWTTokenBlocklist, Users, db
-from flask import request
+
+from api.models import Buyers, Address, Zipcode_Info
+
 
 from ..config import Config
 
-"""
-    Flask-Restx models for api request and response data
-"""
+api = Namespace("Users", description="users information")
 
-signup_model = api.model(
-    "SignUpModel",
+
+parser = reqparse.RequestParser()
+# parser.add_argument("sort", type=str, action="split")
+
+
+# model for getting users.
+""" should display information of the personal information, which
+ includes name, email ID, age, gender, email address, home and billing address, which
+ includes street, city, state and zipcode, last four digits of credit card number."""
+get_user_model = api.model(
+    "Users",
     {
         "email": fields.String(required=True, min_length=4, max_length=120),
-        "password": fields.String(required=True, min_length=4, max_length=16),
-    },
-)
-
-login_model = api.model(
-    "LoginModel",
-    {
-        "email": fields.String(required=True, min_length=4, max_length=120),
-        "password": fields.String(required=True, min_length=4, max_length=16),
-    },
-)
-
-user_edit_model = api.model(
-    "UserEditModel",
-    {
-        "email": fields.String(required=True, min_length=4, max_length=120),
-        "password": fields.String(required=True, min_length=4, max_length=16),
+        "first_name": fields.String(required=True, min_length=1, max_length=16),
+        "last_name": fields.String,
+        "gender": fields.String,
+        "age": fields.Integer(min=0),
+        "home_address": fields.String,
+        "billing_address": fields.String,
+        "last_four_credit_card": fields.String,
     },
 )
 
@@ -91,119 +88,52 @@ def token_required(f):
 """
 
 
-@api.route("/api/auth/register")
-class Register(Resource):
-    """
-       Creates a new user by taking 'signup_model' input
-    """
+# def row2dict(row):
+#     d = {}
+#     for column in row.__table__.columns:
+#         d[column.name] = str(getattr(row, column.name))
 
-    @api.expect(signup_model, validate=True)
-    def post(self):
+#     return d
 
-        req_data = request.get_json()
 
-        _email = req_data.get("email")
-        _password = req_data.get("password")
+@api.route("/<string:email>")
+class User(Resource):
+    @api.marshal_with(get_user_model)
+    def get(self, email):
+        _Buyer = Buyers.query.filter_by(email=email).first()
 
-        user_exists = Users.get_by_email(_email)
-        if user_exists:
-            return {"success": False, "msg": f"{_email} is already in use"}, 400
+        _home_address = Address.query.filter_by(
+            address_ID=_Buyer.home_address_id
+        ).first()
 
-        new_user = Users(email=_email,)
+        _billing_address = (
+            db.session.query(Buyers, Address, Zipcode_Info)
+            .join(Address, Address.address_ID == Buyers.home_address_id)
+            .join(Zipcode_Info, Zipcode_Info.zipcode == Address.zipcode)
+            .filter(Buyers.email == email)
+            .all()
+        )
 
-        # hashed password
-        new_user.set_password(_password)
-        new_user.save()
-
+        for x in _billing_address:
+            print(x._asdict())
+        # print(
+        #     _billing_address.email,
+        #     _billing_address.first_name,
+        #     _billing_address.last_name,
+        #     _billing_address.gender,
+        #     _billing_address.age,
+        # )
         return (
             {
-                "success": True,
-                "email": new_user.email,
-                "msg": "The user was successfully registered",
+                "email": _Buyer.email,
+                "first_name": _Buyer.first_name,
+                "last_name": _Buyer.last_name,
+                "gender": _Buyer.gender,
+                "age": _Buyer.age,
+                "home_address": _home_address,
+                "billing_address": _billing_address,
+                "last_four_credit_card": "1",
             },
             200,
         )
 
-
-@api.route("/api/auth/login", methods=["POST"])
-class Login(Resource):
-    """
-       Login user by taking 'login_model' input and return JWT token
-    """
-
-    @api.expect(login_model, validate=True)
-    def post(self):
-
-        req_data = request.get_json()
-
-        _email = req_data.get("email")
-        _password = req_data.get("password")
-
-        user_exists = Users.get_by_email(_email)
-
-        if not user_exists:
-
-            return {"success": False, "msg": "This email does not exist."}, 400
-
-        if not user_exists.check_password(_password):
-
-            return {"success": False, "msg": "Wrong credentials."}, 400
-
-        # create access token using JWT
-        token = jwt.encode(
-            {"email": _email, "exp": datetime.utcnow() + timedelta(minutes=30)},
-            Config.SECRET_KEY,
-        )
-
-        user_exists.set_jwt_auth_active(True)
-        user_exists.save()
-
-        return {"success": True, "token": token, "user": user_exists.toJSON()}, 200
-
-
-@api.route("/api/auth/edit")
-class EditUser(Resource):
-    """
-       Edits User's username or password or both using 'user_edit_model' input
-    """
-
-    @api.expect(user_edit_model)
-    @token_required
-    def post(self, current_user):
-
-        req_data = request.get_json()
-
-        _new_email = req_data.get("email")
-        _new_password = req_data.get("password")
-
-        if _new_password:
-            self.update_password(_new_password)
-
-        if _new_email:
-            self.update_email(_new_email)
-
-        self.save()
-
-        return {"success": True}, 200
-
-
-@api.route("/api/auth/logout")
-class LogoutUser(Resource):
-    """
-       Logs out User using 'logout_model' input
-    """
-
-    @token_required
-    def post(self, current_user):
-
-        _jwt_token = request.headers["authorization"]
-
-        jwt_block = JWTTokenBlocklist(
-            jwt_token=_jwt_token, created_at=datetime.now(timezone.utc)
-        )
-        jwt_block.save()
-
-        self.set_jwt_auth_active(False)
-        self.save()
-
-        return {"success": True}, 200

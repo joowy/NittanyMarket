@@ -61,7 +61,6 @@ const authSlice = createSlice({
     });
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoggedIn = true;
-      console.log(action.payload);
       state.userData = action.payload.userData;
     });
     builder.addCase(login.rejected, (state, action) => {

@@ -42,11 +42,12 @@ export const Login = () => {
 
     dispatch(login({ email, password }))
       .unwrap()
-      .then(() => {
+      .then((r) => {
+  
         window.location.reload();
       })
       .catch((e) => {
-        console.log(e);
+        
         alert(e);
         setLoading(false);
       });

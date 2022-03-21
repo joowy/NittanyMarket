@@ -1,10 +1,7 @@
-import { AppBar, Box, Button, IconButton, Typography } from "@mui/material";
-import { orange } from "@mui/material/colors";
+import { AppBar, Box, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { theme } from "theme";
 import { LoginButton } from "./LoginButton";
 import { UserButton } from "./UserButton";
 export const TopAppBar = () => {
