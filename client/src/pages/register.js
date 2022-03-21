@@ -9,11 +9,12 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { register } from "features/auth";
+import { register } from "slices/auth";
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { Divider } from "@mui/material";
 
 const theme = createTheme();
 
@@ -29,16 +30,31 @@ export const Register = () => {
     const data = new FormData(event.currentTarget);
     let object = {};
     data.forEach((value, key) => (object[key] = value));
-
-    const { email, password } = object;
-
-    dispatch(register({ email, password }))
+    let {
+      age,
+      city,
+      email,
+      first_name,
+      gender,
+      lastName,
+      password,
+      state,
+      street,
+      zip,
+    } = object;
+    first_name = "assasd";
+    email = "test@test.com";
+    password = "passwod";
+    age = 1;
+    dispatch(register({ age, email, first_name, gender, lastName, password }))
       .unwrap()
       .then((x) => {
         console.log(x);
         window.location.reload();
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e);
+        alert(e);
         setLoading(false);
       });
   };
@@ -73,7 +89,7 @@ export const Register = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="first_name"
                   required
                   fullWidth
                   id="firstName"
@@ -83,7 +99,6 @@ export const Register = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -92,33 +107,15 @@ export const Register = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>{" "}
+                <TextField fullWidth id="age" label="Age" name="age" />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>{" "}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  id="gender"
+                  label="Gender"
+                  name="gender"
+                  autoComplete="sex"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -142,7 +139,50 @@ export const Register = () => {
                   autoComplete="new-password"
                 />
               </Grid>
+              <Grid item xs={12} sm={12}>
+                <Typography component="h1" variant="h5">
+                  Address
+                </Typography>
+                <Divider variant="fullWidth" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="street"
+                  label="Street"
+                  name="street"
+                  autoComplete="address-line1"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="city"
+                  label="City"
+                  name="city"
+                  autoComplete="address-level2"
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="state"
+                  label="State"
+                  name="state"
+                  autoComplete="address-level3"
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="zip"
+                  label="Zip Code"
+                  name="zip"
+                  autoComplete="postal-code"
+                />
+              </Grid>
             </Grid>
+
             <Button
               type="submit"
               fullWidth

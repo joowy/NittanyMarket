@@ -115,8 +115,8 @@ class Register(Resource):
         _first_name = req_data.get("first_name")
         _last_name = req_data.get("last_name")
         _gender = req_data.get("gender")
-        _age = req_data.get("age")
-
+        _age = int(req_data.get("age"))
+        print(_age)
         user_exists = Users.get_by_email(_email)
         if user_exists:
             return {"success": False, "msg": f"{_email} is already in use"}, 400

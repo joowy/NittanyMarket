@@ -17,7 +17,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "features/auth";
+import { login } from "slices/auth";
 import { Navigate } from "react-router-dom";
 
 const theme = createTheme();

@@ -1,6 +1,6 @@
 import { AccountCircle, KeyboardArrowDown } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { logout } from "features/auth";
+import { logout } from "slices/auth";
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
