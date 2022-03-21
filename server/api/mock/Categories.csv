@@ -53,11 +53,11 @@ Wellness,Weight Loss
 Root,Pets
 Pets,Cat 
 Pets,Dog
-Cat ,Dry Food
-Cat ,Wet Food
+Cat ,Cat Dry Food
+Cat ,Cat Wet Food
 Cat ,Climbing Trees
-Dog,Dry Food
-Dog,Wet Food
+Dog,Dog Dry Food
+Dog,Dog Wet Food
 Dog,Dog Beds
 Root,Sports & Outdoors
 Sports & Outdoors,Sports

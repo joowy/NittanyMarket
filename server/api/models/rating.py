@@ -1,14 +1,16 @@
-
 from . import db
 
 
 class Ratings(db.Model):
     __tablename__ = "Ratings"
 
-    buyer_email = db.Column(db.ForeignKey(
-        "Buyers.email", onupdate="CASCADE"), primary_key=True)
-    seller_email = db.Column(db.ForeignKey(
-        "Sellers.email", onupdate="CASCADE"), primary_key=True)
+    buyer_email = db.Column(
+        db.ForeignKey("Buyers.email", onupdate="CASCADE"), primary_key=True
+    )
+    seller_email = db.Column(
+        db.ForeignKey("Sellers.email", onupdate="CASCADE"), primary_key=True
+    )
+    date = db.Column(db.DateTime, primary_key=True)
     rating = db.Column(db.Float)
     rating_desc = db.Column(db.Text)
 
