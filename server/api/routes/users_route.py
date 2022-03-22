@@ -152,7 +152,7 @@ class User(Resource):
             .first()
         )
 
-        last_4 = buyer_credit_card_record.credit_card_num[-4:]
+        last_four = ("****-" * 3) + buyer_credit_card_record.credit_card_num[-4:]
 
         return (
             {
@@ -163,7 +163,7 @@ class User(Resource):
                 "age": buyer_record.age,
                 "home_address": home_address_object,
                 "billing_address": billing_address_object,
-                "last_four_credit_card": last_4,
+                "credit_card_last_four": last_four,
             },
             200,
         )

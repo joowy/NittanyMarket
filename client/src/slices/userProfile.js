@@ -8,7 +8,6 @@ export const GetProfileData = createAsyncThunk(
   async ({ email }, thunkAPI) => {
     try {
       const response = await axios.get(`/users/${email}`);
-
       return response.data;
     } catch (error) {
       const message =
@@ -22,16 +21,7 @@ export const GetProfileData = createAsyncThunk(
 const userProfileData = {
   loading: true,
   error: null,
-  profileData: {
-    email: null,
-    first_name: null,
-    last_name: null,
-    gender: null,
-    age: null,
-    home_address: null,
-    billing_address: null,
-    last_four_credit_card: null,
-  },
+  profileData: null,
 };
 const initialState = userProfileData;
 
@@ -42,12 +32,15 @@ const userProfileSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(GetProfileData.pending, (state, action) => {
       state.loading = true;
+      state.profileData = null;
     });
     builder.addCase(GetProfileData.fulfilled, (state, action) => {
-      state.profileData = action.payload.data;
+      state.profileData = action.payload;
+      state.loading = false;
     });
     builder.addCase(GetProfileData.rejected, (state, action) => {
       state.error = "failed to get profile data";
+      state.loading = false;
       //   state.error = action.payload.data;
     });
   },

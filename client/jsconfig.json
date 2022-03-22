@@ -3,7 +3,8 @@
         "jsx": "react",
         "baseUrl": "./src",
         "module": "commonjs",
-        "target": "ESNext"
+        "target": "ESNext",
+        "checkJs": true
     },
     "include": [
         "src/**/*"
