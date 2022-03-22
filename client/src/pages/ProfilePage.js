@@ -5,7 +5,6 @@ import { GetProfileData } from "slices/userProfile";
 export const ProfilePage = () => {
   const dispatch = useDispatch();
   const { userData, isLoggedIn } = useSelector((state) => state.auth);
-  console.log(userData.user.email);
 
   useEffect(() => {
     dispatch(GetProfileData(userData.user.email))
@@ -18,10 +17,8 @@ export const ProfilePage = () => {
       });
   }, [dispatch, userData.user.email]);
 
-  const { loading, error, userProfileData } = useSelector(
-    (state) => state.profileData
-  );
+  const { loading, error, profileData } = useSelector((state) => state.profile);
 
-  console.log(loading, error, userProfileData);
+  console.log(loading, error, profileData);
   return <div>ProfilePage</div>;
 };

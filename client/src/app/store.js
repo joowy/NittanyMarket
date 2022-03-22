@@ -4,7 +4,7 @@ import profileDataReducer from "../slices/userProfile";
 
 const reducer = {
   auth: authReducer,
-  profileData: profileDataReducer,
+  profile: profileDataReducer,
 };
 const store = configureStore({
   reducer: reducer,
