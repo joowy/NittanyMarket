@@ -10,16 +10,17 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import { GetProfileData } from "slices/userProfile";
 
 export const ProfilePage = () => {
   const dispatch = useDispatch();
+
   const { userData, isLoggedIn } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(GetProfileData(userData.user.email))
       .unwrap()
-
       .catch((e) => {
         alert(e);
       });
@@ -27,11 +28,21 @@ export const ProfilePage = () => {
 
   const { loading, error, profileData } = useSelector((state) => state.profile);
 
-  console.log(loading, error, profileData, profileData?.first_name);
+  if (!isLoggedIn) {
+    alert("Must log in to see your profile");
+    return <Navigate to="/" />;
+  }
+
   return loading ? (
     <div>Loading...</div>
   ) : (
-    <Stack component={"form"} spacing={2}>
+    <Stack
+      component={"form"}
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ width: "80%" }}
+    >
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12}>
           <Typography component="h1" variant="h5">
@@ -167,9 +178,9 @@ export const ProfilePage = () => {
             label="Street"
             name="street"
             defaultValue={
-              profileData.home_address.street_num +
+              profileData.billing_address.street_num +
               " " +
-              profileData.home_address.street_name
+              profileData.billing_address.street_name
             }
           />
         </Grid>
@@ -180,7 +191,7 @@ export const ProfilePage = () => {
             id="city"
             label="City"
             name="city"
-            defaultValue={profileData.home_address.city}
+            defaultValue={profileData.billing_address.city}
           />
         </Grid>
 
@@ -190,7 +201,7 @@ export const ProfilePage = () => {
             id="zip"
             label="Zip Code"
             name="zip"
-            defaultValue={profileData.home_address.zipcode}
+            defaultValue={profileData.billing_address.zipcode}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -199,7 +210,7 @@ export const ProfilePage = () => {
             id="state"
             label="State"
             name="state"
-            defaultValue={profileData.home_address.state_id}
+            defaultValue={profileData.billing_address.state_id}
           />
         </Grid>
 
@@ -209,7 +220,7 @@ export const ProfilePage = () => {
             id="country"
             label="Country"
             name="country"
-            defaultValue={profileData.home_address.country_name}
+            defaultValue={profileData.billing_address.country_name}
           />
         </Grid>
       </Grid>

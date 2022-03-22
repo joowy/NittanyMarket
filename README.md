@@ -15,4 +15,4 @@ Nittany Market is a online market place for the Nittany State University Communi
 
 ## Run the code
 
-To run the code check out the README in the client and server directory.
+To run the code, follow the instructions in the README located at client and server directory.

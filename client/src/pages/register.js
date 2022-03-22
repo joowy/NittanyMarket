@@ -41,10 +41,7 @@ export const Register = () => {
       street,
       zip,
     } = object;
-    first_name = "assasd";
-    email = "test@test.com";
-    password = "passwod";
-    age = 1;
+
     dispatch(register({ age, email, first_name, gender, lastName, password }))
       .unwrap()
       .then((x) => {
