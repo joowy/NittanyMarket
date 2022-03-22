@@ -43,11 +43,9 @@ export const Login = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then((r) => {
-  
         window.location.reload();
       })
       .catch((e) => {
-        
         alert(e);
         setLoading(false);
       });

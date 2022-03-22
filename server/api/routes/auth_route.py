@@ -218,7 +218,6 @@ class LogoutUser(Resource):
     def post(self, current_user):
 
         _jwt_token = request.headers["authorization"]
-
         jwt_block = JWTTokenBlocklist(
             jwt_token=_jwt_token, created_at=datetime.now(timezone.utc)
         )

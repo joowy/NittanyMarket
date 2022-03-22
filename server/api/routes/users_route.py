@@ -19,9 +19,8 @@ from ..config import Config
 
 api = Namespace("Users", description="users information")
 
+error_model = api.model("Error", {"success": fields.Boolean, "msg": fields.String,})
 
-# parser = reqparse.RequestParser()
-# parser.add_argument("sort", type=str, action="split")
 
 # address model
 address_model = api.model(
@@ -102,11 +101,12 @@ def token_required(f):
 
 @api.route("/<string:email>")
 class User(Resource):
-    # @api.marshal_with(get_user_model)
+    @api.response(model=get_user_model, code=200, description="get user info success")
+    @api.response(model=error_model, code=400, description="get user fail")
+    # @token_required
+    # def get(self, current_user, email):
     def get(self, email):
-
         buyer_record = db.session.query(Buyers).filter(email == email).first()
-
         # billing address
         buyer_billing_address_record = (
             db.session.query(Address)
