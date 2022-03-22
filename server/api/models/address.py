@@ -16,10 +16,11 @@ class Address(db.Model):
 
     zipcode_relationship = db.relationship("Zipcode_Info", foreign_keys=[zipcode])
 
-    # def full_address(self):
-    #     return {
-    #         "zipcode": self.zipcode,
-    #         "street_num": self.street_num,
-    #         "street_name": self.street_name,
-    #     }
+    def toDICT(self):
+        cls_dict = {}
+        cls_dict["address_ID"] = self.address_ID
+        cls_dict["zipcode"] = self.zipcode
+        cls_dict["street_num"] = self.street_num
+        cls_dict["street_name"] = self.street_name
 
+        return cls_dict

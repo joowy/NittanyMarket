@@ -1,23 +1,40 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 from tokenize import String
-from flask import request, Blueprint
 
-from flask_restx import Resource, fields, Namespace, reqparse
-from api.models import Users, Buyers, JWTTokenBlocklist, db
 import jwt
-
-from api.models import Buyers, Address, Zipcode_Info
-
+from api.models import (
+    Address,
+    Buyers,
+    Credit_Cards,
+    JWTTokenBlocklist,
+    Users,
+    Zipcode_Info,
+    db,
+)
+from flask import Blueprint, request
+from flask_restx import Namespace, Resource, fields, reqparse
 
 from ..config import Config
 
 api = Namespace("Users", description="users information")
 
 
-parser = reqparse.RequestParser()
+# parser = reqparse.RequestParser()
 # parser.add_argument("sort", type=str, action="split")
 
+# address model
+address_model = api.model(
+    "Address",
+    {
+        "street_num": fields.String,
+        "street_name": fields.String,
+        "city": fields.String,
+        "zipcode": fields.String,
+        "state_id": fields.String,
+        "country_name": fields.String,
+    },
+)
 
 # model for getting users.
 """ should display information of the personal information, which
@@ -32,18 +49,12 @@ get_user_model = api.model(
         "gender": fields.String,
         "age": fields.Integer(min=0),
         "home_address": fields.Nested(address_model),
-        "billing_address": fields.String,
+        "billing_address": fields.Nested(address_model),
         "last_four_credit_card": fields.String,
     },
 )
 
-address_model = api.model("Address",{
-"street_num": fields.String,
-"street_name":fields.String, 
 
-"zipcode":
-
-})
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -89,66 +100,70 @@ def token_required(f):
     return decorator
 
 
-"""
-    Flask-Restx routes
-"""
-
-
-# def row2dict(row):
-#     d = {}
-#     for column in row.__table__.columns:
-#         d[column.name] = str(getattr(row, column.name))
-
-#     return d
-
-
 @api.route("/<string:email>")
 class User(Resource):
-    @api.marshal_with(get_user_model)
+    # @api.marshal_with(get_user_model)
     def get(self, email):
-        _Buyer = Buyers.query.filter_by(email=email).first()
 
-        _home_address = Address.query.filter_by(
-            address_ID=_Buyer.home_address_id
-        ).first()
+        buyer_record = db.session.query(Buyers).filter(email == email).first()
 
-        home_address_record = (
-            db.session.query(Buyers, Zipcode_Info, Address)
-            .join(Address, Address.address_ID == Buyers.home_address_id)
-            .join(Zipcode_Info, Zipcode_Info.zipcode == Address.zipcode)
-            .filter(Buyers.email == email)
-            .all()
-        )[0]
-        billing_address_record = (
-            db.session.query(Buyers, Zipcode_Info, Address)
-            .join(Address, Address.address_ID == Buyers.billing_address_id)
-            .join(Zipcode_Info, Zipcode_Info.zipcode == Address.zipcode)
-            .filter(Buyers.email == email)
-            .all()
-        )[0]
-        # print(home_address_record._asdict())
-        # print(billing_address_record._asdict())
-        print(
-            home_address_record.Address.street_num,
-            home_address_record.Address.street_name,
-            home_address_record.Address.zipcode,
+        # billing address
+        buyer_billing_address_record = (
+            db.session.query(Address)
+            .filter(buyer_record.billing_address_id == Address.address_ID)
+            .first()
+        )
+        buyer_billing_zip_info_record = (
+            db.session.query(Zipcode_Info)
+            .filter(buyer_billing_address_record.zipcode == Zipcode_Info.zipcode)
+            .first()
+        )
+        billing_address_object = {
+            "street_num": buyer_billing_address_record.street_num,
+            "street_name": buyer_billing_address_record.street_name,
+            "zipcode": buyer_billing_address_record.zipcode,
+            "country_name": buyer_billing_zip_info_record.county_name,
+            "state_id": buyer_billing_zip_info_record.state_id,
+            "city": buyer_billing_zip_info_record.city,
+        }
+        # home address
+        buyer_home_address_record = (
+            db.session.query(Address)
+            .filter(buyer_record.home_address_id == Address.address_ID)
+            .first()
+        )
+        buyer_home_zip_info_record = (
+            db.session.query(Zipcode_Info)
+            .filter(buyer_home_address_record.zipcode == Zipcode_Info.zipcode)
+            .first()
         )
         home_address_object = {
-            "street_num": home_address_record.Address.street_num,
-            "street_name": home_address_record.Address.street_name,
-            "zipcode": home_address_record.Address.zipcode,
+            "street_num": buyer_home_address_record.street_num,
+            "street_name": buyer_home_address_record.street_name,
+            "zipcode": buyer_home_address_record.zipcode,
+            "country_name": buyer_home_zip_info_record.county_name,
+            "state_id": buyer_home_zip_info_record.state_id,
+            "city": buyer_home_zip_info_record.city,
         }
+        # buyer credit card
+        buyer_credit_card_record = (
+            db.session.query(Credit_Cards)
+            .filter(buyer_record.email == Credit_Cards.owner_email)
+            .first()
+        )
+
+        last_4 = buyer_credit_card_record.credit_card_num[-4:]
 
         return (
             {
-                "email": home_address_record.Buyers.email,
-                "first_name": home_address_record.Buyers.first_name,
-                "last_name": home_address_record.Buyers.last_name,
-                "gender": home_address_record.Buyers.gender,
-                "age": home_address_record.Buyers.age,
+                "email": buyer_record.email,
+                "first_name": buyer_record.first_name,
+                "last_name": buyer_record.last_name,
+                "gender": buyer_record.gender,
+                "age": buyer_record.age,
                 "home_address": home_address_object,
-                "billing_address": "x",
-                "last_four_credit_card": "1",
+                "billing_address": billing_address_object,
+                "last_four_credit_card": last_4,
             },
             200,
         )

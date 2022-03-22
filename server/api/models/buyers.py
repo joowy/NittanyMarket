@@ -31,6 +31,14 @@ class Buyers(Users):
         db.session.add(self)
         db.session.commit()
 
-    @classmethod
-    def get_by_email(cls, email):
-        return cls.query.filter_by(email=email).first()
+    def toDICT(self):
+
+        cls_dict = {}
+        cls_dict["first_name"] = self.first_name
+        cls_dict["last_name"] = self.last_name
+        cls_dict["gender"] = self.gender
+        cls_dict["age"] = self.age
+        cls_dict["home_address_id"] = self.home_address_id
+        cls_dict["billing_address_id"] = self.billing_address_id
+
+        return cls_dict

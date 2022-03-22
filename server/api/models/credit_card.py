@@ -14,9 +14,20 @@ class Credit_Cards(db.Model):
         nullable=False,
     )
 
-    def __repr__(self):
-        return f"credit_card_num {self.credit_card_num}"
+    # def __repr__(self):
+    #     return f"credit_card_num {self.credit_card_num}"
 
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    def toDICT(self):
+
+        cls_dict = {}
+        cls_dict["credit_card_num"] = self.credit_card_num
+        cls_dict["card_code"] = self.card_code
+        cls_dict["expire_month"] = self.expire_month
+        cls_dict["expire_year"] = self.expire_year
+        cls_dict["card_type"] = self.card_type
+        cls_dict["owner_email"] = self.owner_email
+        return cls_dict

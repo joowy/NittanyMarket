@@ -15,3 +15,14 @@ class Zipcode_Info(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    def toDICT(self):
+        cls_dict = {}
+        cls_dict["zipcode"] = self.zipcode
+        cls_dict["city"] = self.city
+        cls_dict["state_id"] = self.state_id
+        cls_dict["population"] = self.population
+        cls_dict["density"] = self.density
+        cls_dict["county_name"] = self.county_name
+        cls_dict["timezone"] = self.timezone
+        return cls_dict

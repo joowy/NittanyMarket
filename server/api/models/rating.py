@@ -20,3 +20,13 @@ class Ratings(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    def toDICT(self):
+
+        cls_dict = {}
+        cls_dict["buyer_email"] = self.buyer_email
+        cls_dict["seller_email"] = self.seller_email
+        cls_dict["date"] = self.date
+        cls_dict["rating"] = self.rating
+        cls_dict["rating_desc"] = self.rating_desc
+        return cls_dict

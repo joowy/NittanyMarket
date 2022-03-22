@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
+        "jsx": "react",
+        "baseUrl": "./src",
         "module": "commonjs",
         "target": "ESNext",
-        "baseUrl": "./src",
-        "jsx": "react",
         "checkJs": true
     },
     "include": [

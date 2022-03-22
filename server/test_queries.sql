@@ -56,6 +56,9 @@ FROM Zipcode_Info
 WHERE zipcode = 840;
  
 
-DROP TABLE Zipcode_Info;
-DROP TABLE Address;
-DROP TABLE ratings;
+-- DROP TABLE Zipcode_Info;
+-- DROP TABLE Address;
+-- DROP TABLE ratings;
+
+ 
+ 
