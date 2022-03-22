@@ -1,5 +1,7 @@
+import { NotFound404 } from "pages/NotFound404";
 import { Register } from "pages/Register";
 import React from "react";
+import { Navigate } from "react-router-dom";
 import { MainLayout } from "./layouts/MainLayout";
 import { Login } from "./pages/Login";
 
@@ -10,8 +12,8 @@ export const routes = [
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      // { path: "404", element: <NotFound404 /> },
-      //   { path: "*", element: <Navigate to="/" /> },
+      { path: "/404", element: <NotFound404 /> },
+      { path: "*", element: <Navigate to="/404" /> },
     ],
   },
 ];

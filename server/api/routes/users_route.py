@@ -31,13 +31,19 @@ get_user_model = api.model(
         "last_name": fields.String,
         "gender": fields.String,
         "age": fields.Integer(min=0),
-        "home_address": fields.String,
+        "home_address": fields.Nested(address_model),
         "billing_address": fields.String,
         "last_four_credit_card": fields.String,
     },
 )
 
+address_model = api.model("Address",{
+"street_num": fields.String,
+"street_name":fields.String, 
 
+"zipcode":
+
+})
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -106,32 +112,42 @@ class User(Resource):
             address_ID=_Buyer.home_address_id
         ).first()
 
-        _billing_address = (
-            db.session.query(Buyers, Address, Zipcode_Info)
+        home_address_record = (
+            db.session.query(Buyers, Zipcode_Info, Address)
             .join(Address, Address.address_ID == Buyers.home_address_id)
             .join(Zipcode_Info, Zipcode_Info.zipcode == Address.zipcode)
             .filter(Buyers.email == email)
             .all()
+        )[0]
+        billing_address_record = (
+            db.session.query(Buyers, Zipcode_Info, Address)
+            .join(Address, Address.address_ID == Buyers.billing_address_id)
+            .join(Zipcode_Info, Zipcode_Info.zipcode == Address.zipcode)
+            .filter(Buyers.email == email)
+            .all()
+        )[0]
+        # print(home_address_record._asdict())
+        # print(billing_address_record._asdict())
+        print(
+            home_address_record.Address.street_num,
+            home_address_record.Address.street_name,
+            home_address_record.Address.zipcode,
         )
+        home_address_object = {
+            "street_num": home_address_record.Address.street_num,
+            "street_name": home_address_record.Address.street_name,
+            "zipcode": home_address_record.Address.zipcode,
+        }
 
-        for x in _billing_address:
-            print(x._asdict())
-        # print(
-        #     _billing_address.email,
-        #     _billing_address.first_name,
-        #     _billing_address.last_name,
-        #     _billing_address.gender,
-        #     _billing_address.age,
-        # )
         return (
             {
-                "email": _Buyer.email,
-                "first_name": _Buyer.first_name,
-                "last_name": _Buyer.last_name,
-                "gender": _Buyer.gender,
-                "age": _Buyer.age,
-                "home_address": _home_address,
-                "billing_address": _billing_address,
+                "email": home_address_record.Buyers.email,
+                "first_name": home_address_record.Buyers.first_name,
+                "last_name": home_address_record.Buyers.last_name,
+                "gender": home_address_record.Buyers.gender,
+                "age": home_address_record.Buyers.age,
+                "home_address": home_address_object,
+                "billing_address": "x",
                 "last_four_credit_card": "1",
             },
             200,

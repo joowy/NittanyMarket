@@ -58,3 +58,4 @@ WHERE zipcode = 840;
 
 DROP TABLE Zipcode_Info;
 DROP TABLE Address;
+DROP TABLE ratings;

@@ -45,17 +45,15 @@ export const UserButton = () => {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",
+          "aria-labelledby": "basic-button",      
         }}
       >
         <MenuItem>
-          <a href="/login" onClick={logOut}>
-            Log Out
-          </a>
+          <a href="/profile">Profile</a>
         </MenuItem>
         <MenuItem>
           <a href="/login" onClick={logOut}>
-            Profile 
+            Log Out
           </a>
         </MenuItem>
       </Menu>

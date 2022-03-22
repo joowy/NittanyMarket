@@ -1,4 +1,6 @@
-from . import db 
+from . import db
+
+
 class Zipcode_Info(db.Model):
     __tablename__ = "Zipcode_Info"
 
@@ -9,9 +11,6 @@ class Zipcode_Info(db.Model):
     density = db.Column(db.Float)
     county_name = db.Column(db.String)
     timezone = db.Column(db.String)
-
-    def __repr__(self):
-        return f"zipcode {self.zipcode}"
 
     def save(self):
         db.session.add(self)
