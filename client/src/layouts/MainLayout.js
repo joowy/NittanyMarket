@@ -9,7 +9,6 @@ import { Outlet } from "react-router-dom";
 export const MainLayout = () => {
   // @ts-ignore
   const { isLoggedIn } = useSelector((state) => state.auth);
-  console.log(isLoggedIn, "mainlayout");
 
   return (
     <>
