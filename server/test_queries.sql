@@ -61,4 +61,4 @@ WHERE zipcode = 840;
 -- DROP TABLE ratings;
 
  
- 
+ SELECT * from Users WHERE email = "fenrrico4@nsu.edu"

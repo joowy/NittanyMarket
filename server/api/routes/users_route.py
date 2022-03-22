@@ -12,7 +12,7 @@ from api.models import (
     Zipcode_Info,
     db,
 )
-from flask import Blueprint, request
+from flask import request
 from flask_restx import Namespace, Resource, fields, reqparse
 
 from ..config import Config
@@ -99,72 +99,78 @@ def token_required(f):
     return decorator
 
 
-@api.route("/<string:email>")
+@api.route("/<email>")
 class User(Resource):
     @api.response(model=get_user_model, code=200, description="get user info success")
     @api.response(model=error_model, code=400, description="get user fail")
     # @token_required
     # def get(self, current_user, email):
     def get(self, email):
-        buyer_record = db.session.query(Buyers).filter(email == email).first()
-        # billing address
-        buyer_billing_address_record = (
-            db.session.query(Address)
-            .filter(buyer_record.billing_address_id == Address.address_ID)
-            .first()
-        )
-        buyer_billing_zip_info_record = (
-            db.session.query(Zipcode_Info)
-            .filter(buyer_billing_address_record.zipcode == Zipcode_Info.zipcode)
-            .first()
-        )
-        billing_address_object = {
-            "street_num": buyer_billing_address_record.street_num,
-            "street_name": buyer_billing_address_record.street_name,
-            "zipcode": buyer_billing_address_record.zipcode,
-            "country_name": buyer_billing_zip_info_record.county_name,
-            "state_id": buyer_billing_zip_info_record.state_id,
-            "city": buyer_billing_zip_info_record.city,
-        }
-        # home address
-        buyer_home_address_record = (
-            db.session.query(Address)
-            .filter(buyer_record.home_address_id == Address.address_ID)
-            .first()
-        )
-        buyer_home_zip_info_record = (
-            db.session.query(Zipcode_Info)
-            .filter(buyer_home_address_record.zipcode == Zipcode_Info.zipcode)
-            .first()
-        )
-        home_address_object = {
-            "street_num": buyer_home_address_record.street_num,
-            "street_name": buyer_home_address_record.street_name,
-            "zipcode": buyer_home_address_record.zipcode,
-            "country_name": buyer_home_zip_info_record.county_name,
-            "state_id": buyer_home_zip_info_record.state_id,
-            "city": buyer_home_zip_info_record.city,
-        }
-        # buyer credit card
-        buyer_credit_card_record = (
-            db.session.query(Credit_Cards)
-            .filter(buyer_record.email == Credit_Cards.owner_email)
-            .first()
-        )
 
-        last_four = ("****-" * 3) + buyer_credit_card_record.credit_card_num[-4:]
+        buyer_record = db.session.query(Buyers).filter(Buyers.email == email).first()
+        try:
 
-        return (
-            {
-                "email": buyer_record.email,
-                "first_name": buyer_record.first_name,
-                "last_name": buyer_record.last_name,
-                "gender": buyer_record.gender,
-                "age": buyer_record.age,
-                "home_address": home_address_object,
-                "billing_address": billing_address_object,
-                "credit_card_last_four": last_four,
-            },
-            200,
-        )
+            # billing address
+            buyer_billing_address_record = (
+                db.session.query(Address)
+                .filter(buyer_record.billing_address_id == Address.address_ID)
+                .first()
+            )
+            buyer_billing_zip_info_record = (
+                db.session.query(Zipcode_Info)
+                .filter(buyer_billing_address_record.zipcode == Zipcode_Info.zipcode)
+                .first()
+            )
+            billing_address_object = {
+                "street_num": buyer_billing_address_record.street_num,
+                "street_name": buyer_billing_address_record.street_name,
+                "zipcode": buyer_billing_address_record.zipcode,
+                "country_name": buyer_billing_zip_info_record.county_name,
+                "state_id": buyer_billing_zip_info_record.state_id,
+                "city": buyer_billing_zip_info_record.city,
+            }
+            # home address
+            buyer_home_address_record = (
+                db.session.query(Address)
+                .filter(buyer_record.home_address_id == Address.address_ID)
+                .first()
+            )
+            buyer_home_zip_info_record = (
+                db.session.query(Zipcode_Info)
+                .filter(buyer_home_address_record.zipcode == Zipcode_Info.zipcode)
+                .first()
+            )
+            home_address_object = {
+                "street_num": buyer_home_address_record.street_num,
+                "street_name": buyer_home_address_record.street_name,
+                "zipcode": buyer_home_address_record.zipcode,
+                "country_name": buyer_home_zip_info_record.county_name,
+                "state_id": buyer_home_zip_info_record.state_id,
+                "city": buyer_home_zip_info_record.city,
+            }
+            # buyer credit card
+            buyer_credit_card_record = (
+                db.session.query(Credit_Cards)
+                .filter(buyer_record.email == Credit_Cards.owner_email)
+                .first()
+            )
+
+            last_four = ("****-" * 3) + buyer_credit_card_record.credit_card_num[-4:]
+
+            return (
+                {
+                    "email": buyer_record.email,
+                    "first_name": buyer_record.first_name,
+                    "last_name": buyer_record.last_name,
+                    "gender": buyer_record.gender,
+                    "age": buyer_record.age,
+                    "home_address": home_address_object,
+                    "billing_address": billing_address_object,
+                    "credit_card_last_four": last_four,
+                },
+                200,
+            )
+
+        except Exception as e:
+            return {"success": False, "msg": e}, 400
 

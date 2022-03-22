@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { register } from "slices/auth";
+import { register } from "slices/authSlice";
 
 const theme = createTheme();
 

@@ -36,15 +36,9 @@ login_model = api.model(
     },
 )
 
-user_edit_model = api.model(
+update_password_model = api.model(
     "UserEditModel",
-    {
-        "email": fields.String(required=True, min_length=4, max_length=120),
-        "password": fields.String(required=True, min_length=4, max_length=16),
-        "first_name": fields.String(required=True, min_length=1, max_length=16),
-        "last_name": fields.String,
-        "gender": fields.String,
-    },
+    {"password": fields.String(required=True, min_length=4, max_length=16),},
 )
 
 
@@ -188,22 +182,16 @@ class EditUser(Resource):
        Edits User's username or password or both using 'user_edit_model' input
     """
 
-    @api.expect(user_edit_model)
+    @api.expect(update_password_model)
     @token_required
     def post(self, current_user):
 
         req_data = request.get_json()
 
-        _new_email = req_data.get("email")
         _new_password = req_data.get("password")
-
         if _new_password:
             self.update_password(_new_password)
-
-        if _new_email:
-            self.update_email(_new_email)
-
-        self.save()
+            self.save()
 
         return {"success": True}, 200
 

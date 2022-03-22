@@ -1,24 +1,20 @@
-import React, { useState } from "react";
-
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
   Container,
+  CssBaseline,
+  Grid,
+  Link,
+  TextField,
+  Typography,
 } from "@mui/material";
-
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "slices/auth";
 import { Navigate } from "react-router-dom";
+import { login } from "slices/authSlice";
 
 const theme = createTheme();
 
@@ -32,10 +28,13 @@ export const Login = () => {
     setLoading(true);
     const data = new FormData(event.currentTarget);
     const { email, password } = {
-      email: data.get("email"),
-      password: data.get("password"),
+      //   email: data.get("email"),
+      //   password: data.get("password"),
       //   email: "arubertelli0@nsu.edu",
       //   password: "TbIF16hoUqGl",
+
+      email: "fenrrico4@nsu.edu",
+      password: "urRQvgaHt",
       // email: "test@test.com",
       // password: "pass",
     };

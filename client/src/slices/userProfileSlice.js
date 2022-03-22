@@ -5,9 +5,11 @@ const userCredential = JSON.parse(localStorage.getItem("user_credential"));
 
 export const GetProfileData = createAsyncThunk(
   "profileData",
-  async ({ email }, thunkAPI) => {
+  async (email, thunkAPI) => {
     try {
+      console.log(email, "test@test");
       const response = await axios.get(`/users/${email}`);
+
       return response.data;
     } catch (error) {
       const message =

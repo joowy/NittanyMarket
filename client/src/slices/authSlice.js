@@ -44,6 +44,31 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   await AuthService.logout();
 });
+
+export const updatePassword = createAsyncThunk(
+  "auth/edit",
+  async (password, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "auth/edit",
+        { password },
+        {
+          headers: {
+            authorization: userData.token, //the token is a variable which holds the token
+          },
+        }
+      );
+      console.log(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.msg ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 const initialState = userData
   ? { isLoggedIn: true, userData }
   : { isLoggedIn: false, userData: null };
