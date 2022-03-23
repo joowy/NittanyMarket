@@ -102,7 +102,7 @@ def token_required(f):
 @api.route("/<email>")
 class User(Resource):
     @api.response(model=get_user_model, code=200, description="get user info success")
-    @api.response(model=error_model, code=400, description="get user fail")
+    @api.response(model=error_model, code=400, description="get user info fail")
     # @token_required
     # def get(self, current_user, email):
     def get(self, email):
