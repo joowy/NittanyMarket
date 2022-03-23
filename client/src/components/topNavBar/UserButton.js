@@ -1,6 +1,6 @@
 import { AccountCircle, KeyboardArrowDown } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { logout } from "slices/auth";
+import { logout } from "slices/authSlice";
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,7 +45,7 @@ export const UserButton = () => {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",      
+          "aria-labelledby": "basic-button",
         }}
       >
         <MenuItem>

@@ -14,6 +14,7 @@ export const MainLayout = () => {
           <Outlet />
         </Grid>
       </Box>
+      <Box sx={{ display: "block", height: "70px", width: "100%" }} />
     </>
   );
 };
