@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
 import {
   Collapse,
+  Divider,
   Drawer,
   List,
   ListItemButton,
@@ -45,15 +46,18 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
   );
 
   const getTreeItemsFromData = (treeItems) => {
-    return Object.entries(treeItems).forEach(([key, value]) => {
+    return treeItems.map((treeItemData) => {
       let children = undefined;
-      console.log(value, Object.keys(value).length);
-      if (Object.keys(value).length > 0 && value) {
-        children = getTreeItemsFromData(value);
+      if (treeItemData.children && treeItemData.children.length > 0) {
+        children = getTreeItemsFromData(treeItemData.children);
       }
-      console.log(children);
       return (
-        <TreeItem key={key} nodeId={key} label={key} children={children} />
+        <TreeItem
+          key={treeItemData.name}
+          nodeId={treeItemData.name}
+          label={treeItemData.name}
+          children={children}
+        />
       );
     });
   };
@@ -74,6 +78,8 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       variant="temporary"
       onBackdropClick={toggleDrawer("left", false)}
     >
+      Product Categories
+      <Divider />
       <DataTreeView treeItems={data} />
     </Drawer>
   );

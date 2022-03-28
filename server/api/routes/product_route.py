@@ -77,7 +77,7 @@ class ProductCategory(Resource):
 
             # assuming we wanted node id #0 as the top of the tree
             # print(results)
-            return results["Root"]
+            return results["Root"]["children"]
 
         return make_tree(lst), 200
 
