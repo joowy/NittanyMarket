@@ -7,6 +7,7 @@ rest_api = Api(version="1.0", title="Nittany Market API")
 
 from .users_route import api as usersNs
 from .auth_route import api as buyersAuthNs
+from .product_route import api as productNs
 
 # rest_api.add_namespace(
 #     userNs,
@@ -17,6 +18,5 @@ from .auth_route import api as buyersAuthNs
 rest_api.add_namespace(
     buyersAuthNs, path="/api/auth",
 )
-
 rest_api.add_namespace(usersNs, path="/api/users")
-
+rest_api.add_namespace(productNs, path="/api/product")

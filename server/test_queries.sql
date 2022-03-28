@@ -62,3 +62,7 @@ WHERE zipcode = 840;
 
  
  SELECT * from Users WHERE email = "fenrrico4@nsu.edu"
+
+
+ SELECT "Categories".parent_category AS "Categories_parent_category", "Categories".category_name AS "Categories_category_name"
+FROM "Categories" ;

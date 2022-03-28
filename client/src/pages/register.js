@@ -41,7 +41,7 @@ export const Register = () => {
       street,
       zip,
     } = object;
-
+    age = Number(age);
     dispatch(register({ age, email, first_name, gender, lastName, password }))
       .unwrap()
       .then((x) => {
