@@ -58,11 +58,13 @@ WHERE zipcode = 840;
 
 -- DROP TABLE Zipcode_Info;
 -- DROP TABLE Address;
--- DROP TABLE ratings;
-
+-- DROP TABLE Product_Listing;
+-- DROP TABLE Categories;
  
- SELECT * from Users WHERE email = "fenrrico4@nsu.edu"
+ 
+ 
+SELECT *
+FROM Product_Listing where seller_email = "test@test.com";
 
-
- SELECT "Categories".parent_category AS "Categories_parent_category", "Categories".category_name AS "Categories_category_name"
-FROM "Categories" ;
+SELECT   DISTINCT category
+FROM Product_Listing  

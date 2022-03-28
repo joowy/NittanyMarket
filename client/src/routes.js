@@ -1,7 +1,7 @@
 import { NotFound404 } from "pages/NotFound404";
 import { ProductsPage } from "pages/ProductsPage";
 import { ProfilePage } from "pages/ProfilePage";
-import { Register } from "pages/Register";
+import { Register } from "pages/RegisterPage";
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { MainLayout } from "./layouts/MainLayout";
