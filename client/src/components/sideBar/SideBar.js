@@ -1,40 +1,72 @@
+import { StarBorder } from "@mui/icons-material";
+import CategoryIcon from "@mui/icons-material/Category";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { TreeItem, TreeView } from "@mui/lab";
 import {
-  Box,
-  Divider,
+  Collapse,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetCategoryHierarchy } from "slices/productCategoriesSlice";
+export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
+  const [open, setOpen] = React.useState(true);
 
-export const SideBar = ({ toggleDrawer, sideBarOpen }) => {
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role="presentation"
-    >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? "0asdads" : "basd"}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? "0asdads" : "basd"}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    <>
+      <ListItemButton onClick={handleClick}>
+        <ListItemIcon>
+          <CategoryIcon />
+        </ListItemIcon>
+        <ListItemText primary="Inbox" />
+        {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <StarBorder />
+            </ListItemIcon>
+            <ListItemText primary="Starred" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+    </>
   );
 
+  const getTreeItemsFromData = (treeItems) => {
+    return Object.entries(treeItems).forEach(([key, value]) => {
+      let children = undefined;
+      console.log(value, Object.keys(value).length);
+      if (Object.keys(value).length > 0 && value) {
+        children = getTreeItemsFromData(value);
+      }
+      console.log(children);
+      return (
+        <TreeItem key={key} nodeId={key} label={key} children={children} />
+      );
+    });
+  };
+  const DataTreeView = ({ treeItems }) => {
+    return (
+      <TreeView
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+      >
+        {getTreeItemsFromData(treeItems)}
+      </TreeView>
+    );
+  };
   return (
     <Drawer
       anchor={"left"}
@@ -42,7 +74,7 @@ export const SideBar = ({ toggleDrawer, sideBarOpen }) => {
       variant="temporary"
       onBackdropClick={toggleDrawer("left", false)}
     >
-      {list("left")}
+      <DataTreeView treeItems={data} />
     </Drawer>
   );
 };

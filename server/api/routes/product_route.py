@@ -49,35 +49,37 @@ class ProductCategory(Resource):
         """
         return json with nested product categories 
         """
-
-        def traverse(hierarchy, graph, names):
-            """https://stackoverflow.com/a/45461474/11661319"""
-            for name in names:
-                hierarchy[name] = traverse({}, graph, graph[name])
-            return hierarchy
-
         categories = Categories.query.all()
-
         lst: List[(str, str)] = []
         for relationship in categories:
             lst.append((relationship.parent_category, relationship.category_name))
 
-        graph = {}
-        for parent, child in lst:
-            graph[parent] = graph.get(parent, set())
-            graph[child] = graph.get(child, set())
+        def make_tree(pc_list):
+            results = {}
+            for record in pc_list:
+                parent_id = record[0]
+                id = record[1]
 
-        has_parent = {name: False for tup in lst for name in tup}
+                if id in results:
+                    node = results[id]
+                else:
+                    node = results[id] = {}
+                node["name"] = id
+                if parent_id != id:
+                    if parent_id in results:
+                        parent = results[parent_id]
+                    else:
+                        parent = results[parent_id] = {}
+                    if "children" in parent:
+                        parent["children"].append(node)
+                    else:
+                        parent["children"] = [node]
 
-        for parent, child in lst:
-            graph[parent].add(child)
-            has_parent[child] = True
+            # assuming we wanted node id #0 as the top of the tree
+            # print(results)
+            return results["Root"]
 
-        roots = [name for name, parents in has_parent.items() if not parents]
-
-        categoryHierarchy = traverse({}, graph, roots)
-
-        return categoryHierarchy, 200
+        return make_tree(lst), 200
 
 
 @api.route("/list")
