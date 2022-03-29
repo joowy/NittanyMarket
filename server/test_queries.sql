@@ -68,3 +68,7 @@ FROM Product_Listing where seller_email = "test@test.com";
 
 SELECT   DISTINCT category
 FROM Product_Listing  
+
+
+SELECT DISTINCT category
+FROM Product_Listing;

@@ -5,46 +5,22 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
 import {
+  Box,
   Collapse,
   Divider,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  MenuItem,
+  Stack,
+  Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { GetCategoryHierarchy } from "slices/productCategoriesSlice";
+import React, { useState } from "react";
+import { SideBarItem } from "./SideBarItem";
 export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
   const [open, setOpen] = React.useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  const list = (anchor) => (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
-        </List>
-      </Collapse>
-    </>
-  );
 
   const getTreeItemsFromData = (treeItems) => {
     return treeItems.map((treeItemData) => {
@@ -53,12 +29,15 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
         children = getTreeItemsFromData(treeItemData.children);
       }
       return (
-        <TreeItem
-          key={treeItemData.name}
-          nodeId={treeItemData.name}
-          label={treeItemData.name}
-          children={children}
-        />
+        <Box>
+          <Typography>{treeItemData.name}</Typography>
+          <TreeItem
+            key={treeItemData.name}
+            nodeId={treeItemData.name}
+            // label={treeItemData.name}
+            children={children}
+          />
+        </Box>
       );
     });
   };
@@ -67,11 +46,22 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
+        sx={{ width: 300 }}
       >
         {getTreeItemsFromData(treeItems)}
       </TreeView>
     );
   };
+
+  //   const dataTree = data?.map((item) => {
+  //      if(item.children){
+  //          return (
+
+  //          )
+  //      }
+  //     return <a> item </a>;
+  //   });
+
   return (
     <Drawer
       anchor={"left"}
@@ -82,6 +72,10 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       Product Categories
       <Divider />
       <DataTreeView treeItems={data} />
+      {/* <Stack>
+        <SideBarItem />
+        <SideBarItem />
+      </Stack> */}
     </Drawer>
   );
 };
