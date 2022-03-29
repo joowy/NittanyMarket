@@ -1,50 +1,11 @@
-import { StarBorder } from "@mui/icons-material";
-import CategoryIcon from "@mui/icons-material/Category";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
-import {
-  Collapse,
-  Divider,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { GetCategoryHierarchy } from "slices/productCategoriesSlice";
+import { Divider, Drawer } from "@mui/material";
+import React from "react";
 export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
-  const [open, setOpen] = React.useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  const list = (anchor) => (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
-        </List>
-      </Collapse>
-    </>
-  );
-
+  // nested tree by
+  // https://stackoverflow.com/a/57714683/11661319
   const getTreeItemsFromData = (treeItems) => {
     return treeItems.map((treeItemData) => {
       let children = undefined;
@@ -52,12 +13,16 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
         children = getTreeItemsFromData(treeItemData.children);
       }
       return (
-        <TreeItem
-          key={treeItemData.name}
-          nodeId={treeItemData.name}
-          label={treeItemData.name}
-          children={children}
-        />
+        <>
+          {" "}
+          <TreeItem
+            key={treeItemData.name}
+            nodeId={treeItemData.name}
+            // label={treeItemData.name}
+            children={children}
+          />{" "}
+          {treeItemData.name}
+        </>
       );
     });
   };
