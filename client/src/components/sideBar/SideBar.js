@@ -1,36 +1,63 @@
 import {
   Box,
+  Collapse,
   Divider,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  MenuItem,
 } from "@mui/material";
-import React from "react";
-
+import React, { useState } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 export const SideBar = ({ toggleDrawer, sideBarOpen }) => {
+  const [open, setOpen] = useState(false);
+  const handleClick = () => {
+    setOpen((prev) => !prev);
+  };
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
       role="presentation"
     >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? "0asdads" : "basd"}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      All Categories
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? "0asdads" : "basd"}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+       <ListItem 
+        initiallyOpen={true}  nestedItems={[
+        <ListItem
+          key={1}
+          primaryText="Starred"
+          leftIcon={<ActionGrade />}
+        />,
+        <ListItem
+          key={2}
+          primaryText="Sent Mail"
+          leftIcon={<ContentSend />}
+          disabled={true}
+          nestedItems={[
+            <ListItem key={1} primaryText="Drafts" leftIcon={<ContentDrafts />} />,
+          ]}
+        />,
+        <ListItem
+          key={3}
+          primaryText="Inbox"
+          leftIcon={<ContentInbox />}
+          open={this.state.open}
+          onNestedListToggle={this.handleNestedListToggle}
+          nestedItems={[
+            <ListItem key={1} primaryText="Drafts" leftIcon={<ContentDrafts />} />,
+          ]}
+        />,
+      ]}
+       / >
+
+
+     
+          </List>
+        </Collapse>
       </List>
     </Box>
   );
