@@ -3,11 +3,11 @@ import { axiosClient as axios } from "../api/axios.config";
 
 const userCredential = JSON.parse(localStorage.getItem("user_credential"));
 
-export const GetProfileData = createAsyncThunk(
-  "profileData",
-  async (email, thunkAPI) => {
+export const GetCategoryHierarchy = createAsyncThunk(
+  "GetCategoryHierarchy",
+  async (thunkAPI) => {
     try {
-      const response = await axios.get(`/users/${email}`);
+      const response = await axios.get(`/product/product_categories`);
 
       return response.data;
     } catch (error) {
@@ -19,32 +19,33 @@ export const GetProfileData = createAsyncThunk(
     }
   }
 );
-const userProfileData = {
+
+const categoryHierarchyData = {
   loading: true,
   error: null,
-  profileData: null,
+  data: null,
 };
-const initialState = userProfileData;
+const initialState = categoryHierarchyData;
 
-const userProfileSlice = createSlice({
-  name: "userProfile",
+const categoryHierarchySlice = createSlice({
+  name: "categoryHierarchy",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(GetProfileData.pending, (state, action) => {
+    builder.addCase(GetCategoryHierarchy.pending, (state, action) => {
       state.loading = true;
-      state.profileData = null;
+      state.data = null;
     });
-    builder.addCase(GetProfileData.fulfilled, (state, action) => {
-      state.profileData = action.payload;
+    builder.addCase(GetCategoryHierarchy.fulfilled, (state, action) => {
+      state.data = action.payload;
       state.loading = false;
     });
-    builder.addCase(GetProfileData.rejected, (state, action) => {
-      state.error = "failed to get profile data";
+    builder.addCase(GetCategoryHierarchy.rejected, (state, action) => {
+      state.error = "failed to get category hierarchy";
       state.loading = false;
       //   state.error = action.payload.data;
     });
   },
 });
-const { reducer } = userProfileSlice;
+const { reducer } = categoryHierarchySlice;
 export default reducer;
