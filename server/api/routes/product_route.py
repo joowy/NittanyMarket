@@ -6,6 +6,7 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 from sqlalchemy import func
 
+
 api = Namespace("Products", description="Products related routes")
 
 
@@ -16,24 +17,69 @@ product_hierarchy_model["parent_category"] = fields.Nested(product_hierarchy_mod
 error_model = api.model("Error", {"success": fields.Boolean, "msg": fields.String,})
 
 
+def construct_category_heirachy():
+    categories = Categories.query.all()
+    # create list (parent, child) tuple easier to work with
+    lst: List[(str, str)] = []
+    for relationship in categories:
+        lst.append((relationship.parent_category, relationship.category_name))
+    results = {}
+    for record in lst:
+        parent_product = record[0]
+        product_name = record[1]
+        if product_name in results:
+            node = results[product_name]
+        else:
+            node = results[product_name] = {}
+
+        node["name"] = product_name
+        if parent_product != product_name:
+            if parent_product in results:
+                parent = results[parent_product]
+            else:
+                parent = results[parent_product] = {}
+            if "children" in parent:
+                parent["children"].append(node)
+            else:
+                parent["children"] = [node]
+    return results
+
+
 @api.route("/category/", defaults={"category": None})
 @api.route("/category/<category>")
 @api.doc(params={"category": "category name, empty to get all listings not filtered"})
 class GetProducts(Resource):
     def get(self, category):
-        print(category)
+
+        category_children = construct_category_heirachy()[category]
+        sub_catagories = []
+
+        def recurse_dict(d):
+            """
+            find all sub categories 
+            """
+            name = d["name"]
+            sub_catagories.append(name)
+            if "children" in d:
+                children = d["children"]
+                for i in children:
+                    recurse_dict(i)
+
+        recurse_dict(category_children)
+
         if category:
             products_list = (
                 db.session.query(Product_Listing)
-                .filter(Product_Listing.category == category)
+                .filter(Product_Listing.category.in_(sub_catagories))
+                .filter(Product_Listing.product_active_end == None)
                 .all()
             )
         else:
             products_list = db.session.query(Product_Listing).limit(20).all()
+
         out = []
         for i in products_list:
             out.append(i.to_dict())
-
         return out, 200
 
 
@@ -49,37 +95,8 @@ class ProductCategory(Resource):
         """
         return json with nested product categories 
         """
-        categories = Categories.query.all()
-        lst: List[(str, str)] = []
-        for relationship in categories:
-            lst.append((relationship.parent_category, relationship.category_name))
 
-        def make_tree(pc_list):
-            results = {}
-            for record in pc_list:
-                parent_id = record[0]
-                id = record[1]
-
-                if id in results:
-                    node = results[id]
-                else:
-                    node = results[id] = {}
-                node["name"] = id
-                if parent_id != id:
-                    if parent_id in results:
-                        parent = results[parent_id]
-                    else:
-                        parent = results[parent_id] = {}
-                    if "children" in parent:
-                        parent["children"].append(node)
-                    else:
-                        parent["children"] = [node]
-
-            # assuming we wanted node id #0 as the top of the tree
-            # print(results)
-            return results["Root"]["children"]
-
-        return make_tree(lst), 200
+        return construct_category_heirachy()["Root"]["children"], 200
 
 
 @api.route("/list")

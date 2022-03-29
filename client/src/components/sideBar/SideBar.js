@@ -1,11 +1,24 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
-import { Divider, Drawer } from "@mui/material";
-import React from "react";
+import {
+  Box,
+  Collapse,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { SideBarItem } from "./SideBarItem";
 export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
-  // nested tree by
-  // https://stackoverflow.com/a/57714683/11661319
+  const [open, setOpen] = React.useState(true);
+
   const getTreeItemsFromData = (treeItems) => {
     return treeItems.map((treeItemData) => {
       let children = undefined;
@@ -13,16 +26,15 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
         children = getTreeItemsFromData(treeItemData.children);
       }
       return (
-        <>
-          {" "}
+        <Box>
+          <Typography>{treeItemData.name}</Typography>
           <TreeItem
             key={treeItemData.name}
             nodeId={treeItemData.name}
             // label={treeItemData.name}
             children={children}
-          />{" "}
-          {treeItemData.name}
-        </>
+          />
+        </Box>
       );
     });
   };
@@ -31,11 +43,22 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
+        sx={{ width: 300 }}
       >
         {getTreeItemsFromData(treeItems)}
       </TreeView>
     );
   };
+
+  //   const dataTree = data?.map((item) => {
+  //      if(item.children){
+  //          return (
+
+  //          )
+  //      }
+  //     return <a> item </a>;
+  //   });
+
   return (
     <Drawer
       anchor={"left"}
@@ -46,6 +69,10 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       Product Categories
       <Divider />
       <DataTreeView treeItems={data} />
+      {/* <Stack>
+        <SideBarItem />
+        <SideBarItem />
+      </Stack> */}
     </Drawer>
   );
 };
