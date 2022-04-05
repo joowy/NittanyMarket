@@ -28,13 +28,12 @@ export const Login = () => {
     setLoading(true);
     const data = new FormData(event.currentTarget);
     const { email, password } = {
-      //   email: data.get("email"),
-      //   password: data.get("password"),
-      //   email: "arubertelli0@nsu.edu",
-      //   password: "TbIF16hoUqGl",
-
-      email: "fenrrico4@nsu.edu",
-      password: "urRQvgaHt",
+      email: data.get("email"),
+      password: data.get("password"),
+      // email: "arubertelli0@nsu.edu",
+      // password: "TbIF16hoUqGl",
+      //   email: "fenrrico4@nsu.edu",
+      //   password: "urRQvgaHt",
       // email: "test@test.com",
       // password: "pass",
     };

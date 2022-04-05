@@ -6,3 +6,6 @@ Flask-Cors==3.0.10
 pytest
 gunicorn==20.1.0
 python-dotenv == 0.19.2
+SQLAlchemy-serializer == 1.4.1
+
+

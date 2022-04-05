@@ -1,15 +1,34 @@
+import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, IconButton, Typography } from "@mui/material";
-import React from "react";
+import { SideBar } from "components/sideBar/SideBar";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LoginButton } from "./LoginButton";
 import { UserButton } from "./UserButton";
 export const TopAppBar = () => {
-  // @ts-ignore
+  const [sideBarOpen, setSideBarOpen] = useState(false);
+
   const { isLoggedIn } = useSelector((state) => state.auth);
+  const { data } = useSelector((state) => state.categoryHierarchy);
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setSideBarOpen(!sideBarOpen);
+  };
   return (
     <AppBar>
       <Box display={"flex"}>
+        <IconButton sx={{ color: "white" }} onClick={toggleDrawer()}>
+          <MenuIcon />
+        </IconButton>
         <IconButton
           aria-label="home-button"
           sx={[
@@ -36,9 +55,14 @@ export const TopAppBar = () => {
             Nittany Market
           </Typography>
         </IconButton>
-
         <Box sx={{ flexGrow: 1 }} />
         {isLoggedIn ? <UserButton /> : <LoginButton />}
+        <SideBar
+          sideBarOpen={sideBarOpen}
+          toggleDrawer={toggleDrawer}
+          data={data}
+          setSideBarOpen={setSideBarOpen}
+        />
       </Box>
     </AppBar>
   );

@@ -58,7 +58,23 @@ WHERE zipcode = 840;
 
 -- DROP TABLE Zipcode_Info;
 -- DROP TABLE Address;
--- DROP TABLE ratings;
-
+-- DROP TABLE Product_Listing;
+-- DROP TABLE Categories;
  
- SELECT * from Users WHERE email = "fenrrico4@nsu.edu"
+ 
+ 
+SELECT *
+FROM Product_Listing where seller_email = "test@test.com";
+
+SELECT   DISTINCT category
+FROM Product_Listing  
+
+
+SELECT DISTINCT category
+FROM Product_Listing;
+
+SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
+
+
+
+SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 

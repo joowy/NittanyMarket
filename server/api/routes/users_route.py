@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta, timezone
 from functools import wraps
-from tokenize import String
 
 import jwt
 from api.models import (
@@ -13,7 +11,7 @@ from api.models import (
     db,
 )
 from flask import request
-from flask_restx import Namespace, Resource, fields, reqparse
+from flask_restx import Namespace, Resource, fields
 
 from ..config import Config
 
@@ -52,7 +50,6 @@ get_user_model = api.model(
         "last_four_credit_card": fields.String,
     },
 )
-
 
 def token_required(f):
     @wraps(f)
@@ -109,7 +106,6 @@ class User(Resource):
 
         buyer_record = db.session.query(Buyers).filter(Buyers.email == email).first()
         try:
-
             # billing address
             buyer_billing_address_record = (
                 db.session.query(Address)

@@ -1,7 +1,9 @@
 from . import db
 
+from sqlalchemy_serializer import SerializerMixin
 
-class Product_Listing(db.Model):
+
+class Product_Listing(db.Model, SerializerMixin):
     __tablename__ = "Product_Listing"
 
     seller_email = db.Column(
@@ -17,6 +19,9 @@ class Product_Listing(db.Model):
     product_description = db.Column(db.Text)
     price = db.Column(db.Float)
     quantity = db.Column(db.Integer)
+
+    product_active_start = db.Column(db.DateTime)
+    product_active_end = db.Column(db.DateTime)
 
     # relationship
     category_relationship = db.relationship("Categories", foreign_keys=[category])
@@ -39,5 +44,7 @@ class Product_Listing(db.Model):
         cls_dict["product_description"] = self.product_description
         cls_dict["price"] = self.price
         cls_dict["quantity"] = self.quantity
+        cls_dict["product_active_start"] = self.product_active_start
+        cls_dict["product_active_end"] = self.product_active_end
 
         return cls_dict
