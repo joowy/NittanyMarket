@@ -1,27 +1,9 @@
-import { StarBorder } from "@mui/icons-material";
-import CategoryIcon from "@mui/icons-material/Category";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
-import {
-  Box,
-  Collapse,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import { SideBarItem } from "./SideBarItem";
+import { Box, Divider, Drawer, Typography } from "@mui/material";
+import React from "react";
 export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
-  const [open, setOpen] = React.useState(true);
-
   const getTreeItemsFromData = (treeItems) => {
     return treeItems.map((treeItemData) => {
       let children = undefined;
@@ -30,11 +12,11 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       }
       return (
         <Box>
-          <Typography>{treeItemData.name}</Typography>
+          {/* <Typography>{treeItemData.name}</Typography> */}
           <TreeItem
             key={treeItemData.name}
             nodeId={treeItemData.name}
-            // label={treeItemData.name}
+            label={treeItemData.name}
             children={children}
           />
         </Box>
@@ -53,15 +35,6 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
     );
   };
 
-  //   const dataTree = data?.map((item) => {
-  //      if(item.children){
-  //          return (
-
-  //          )
-  //      }
-  //     return <a> item </a>;
-  //   });
-
   return (
     <Drawer
       anchor={"left"}
@@ -69,13 +42,11 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       variant="temporary"
       onBackdropClick={toggleDrawer("left", false)}
     >
-      Product Categories
-      <Divider />
-      <DataTreeView treeItems={data} />
-      {/* <Stack>
-        <SideBarItem />
-        <SideBarItem />
-      </Stack> */}
+      <Box sx={{ margin: 1 }}>
+        Product Categories
+        <Divider />
+        <DataTreeView treeItems={data} />
+      </Box>
     </Drawer>
   );
 };
