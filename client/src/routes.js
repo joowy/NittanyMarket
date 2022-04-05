@@ -12,10 +12,18 @@ export const routes = [
     path: "/",
     element: <MainLayout />,
     children: [
+      { path: "/", element: <Navigate to="/product/category/" /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/profile", element: <ProfilePage /> },
-      { path: "/products", element: <ProductsPage /> },
+      {
+        path: "/product",
+        // element: <ProductsPage />,
+        children: [
+          { path: "/product/category/:category", element: <ProductsPage /> },
+          { path: "/product/category/", element: <ProductsPage /> },
+        ],
+      },
       { path: "/404", element: <NotFound404 /> },
       { path: "*", element: <Navigate to="/404" /> },
     ],

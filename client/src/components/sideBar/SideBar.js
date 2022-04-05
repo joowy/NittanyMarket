@@ -1,9 +1,22 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TreeItem, TreeView } from "@mui/lab";
-import { Box, Divider, Drawer, Typography } from "@mui/material";
+import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
 import React from "react";
-export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
+import { useNavigate } from "react-router-dom";
+
+export const SideBar = ({
+  toggleDrawer,
+  sideBarOpen,
+  data,
+  setSideBarOpen,
+}) => {
+  let navigate = useNavigate();
+
+  const handleClickCategory = (category) => {
+    setSideBarOpen(false);
+    navigate(`/product/category/${category}`);
+  };
   const getTreeItemsFromData = (treeItems) => {
     return treeItems.map((treeItemData) => {
       let children = undefined;
@@ -11,14 +24,17 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
         children = getTreeItemsFromData(treeItemData.children);
       }
       return (
-        <Box>
-          {/* <Typography>{treeItemData.name}</Typography> */}
-          <TreeItem
-            key={treeItemData.name}
-            nodeId={treeItemData.name}
-            label={treeItemData.name}
-            children={children}
-          />
+        <Box key={treeItemData.name}>
+          <Button
+            fullWidth
+            sx={{ justifyContent: "flex-start" }}
+            onClick={() => {
+              handleClickCategory(treeItemData.name);
+            }}
+          >
+            <Typography>{treeItemData.name}</Typography>{" "}
+          </Button>
+          <TreeItem nodeId={treeItemData.name} children={children} />
         </Box>
       );
     });
@@ -42,11 +58,9 @@ export const SideBar = ({ toggleDrawer, sideBarOpen, data }) => {
       variant="temporary"
       onBackdropClick={toggleDrawer("left", false)}
     >
-      <Box sx={{ margin: 1 }}>
-        Product Categories
-        <Divider />
-        <DataTreeView treeItems={data} />
-      </Box>
+      <Typography variant="h5">Product Categories</Typography>
+      <Divider />
+      <DataTreeView treeItems={data} />
     </Drawer>
   );
 };

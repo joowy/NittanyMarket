@@ -72,3 +72,9 @@ FROM Product_Listing
 
 SELECT DISTINCT category
 FROM Product_Listing;
+
+SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
+
+
+
+SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 

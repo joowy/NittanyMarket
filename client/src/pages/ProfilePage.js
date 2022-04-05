@@ -23,7 +23,6 @@ export const ProfilePage = () => {
 
   const { loading, error, profileData } = useSelector((state) => state.profile);
   const { userData, isLoggedIn } = useSelector((state) => state.auth);
-  console.log(userData.user.email, "email");
 
   useEffect(() => {
     dispatch(GetProfileData(userData.user.email))

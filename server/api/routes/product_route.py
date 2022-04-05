@@ -51,7 +51,6 @@ def construct_category_heirachy():
 class GetProducts(Resource):
     def get(self, category):
 
-        category_children = construct_category_heirachy()[category]
         sub_catagories = []
 
         def recurse_dict(d):
@@ -65,9 +64,9 @@ class GetProducts(Resource):
                 for i in children:
                     recurse_dict(i)
 
-        recurse_dict(category_children)
-
         if category:
+            category_children = construct_category_heirachy()[category]
+            recurse_dict(category_children)
             products_list = (
                 db.session.query(Product_Listing)
                 .filter(Product_Listing.category.in_(sub_catagories))

@@ -106,7 +106,6 @@ class User(Resource):
 
         buyer_record = db.session.query(Buyers).filter(Buyers.email == email).first()
         try:
-
             # billing address
             buyer_billing_address_record = (
                 db.session.query(Address)
