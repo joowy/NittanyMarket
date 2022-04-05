@@ -1,9 +1,19 @@
 import { Box, CssBaseline, Grid } from "@mui/material";
 import { TopAppBar } from "components/topNavBar/TopAppBar";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { GetCategoryHierarchy } from "slices/productCategoriesHierarchySlice";
 
 export const MainLayout = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(GetCategoryHierarchy())
+      .unwrap()
+      .catch((e) => {
+        alert(e);
+      });
+  }, []);
   return (
     <>
       <CssBaseline />

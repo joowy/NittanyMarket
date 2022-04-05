@@ -1,27 +1,17 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, IconButton, Typography } from "@mui/material";
 import { SideBar } from "components/sideBar/SideBar";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LoginButton } from "./LoginButton";
 import { UserButton } from "./UserButton";
-import { useDispatch, useSelector } from "react-redux";
-import { GetCategoryHierarchy } from "slices/productCategoriesSlice";
 export const TopAppBar = () => {
-  // @ts-ignore
-  const { isLoggedIn } = useSelector((state) => state.auth);
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const dispatch = useDispatch();
-  //   dispatch(GetCategoryHierarchy());
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.categoryHierarchy);
-  //   console.log(data);
-  useEffect(() => {
-    dispatch(GetCategoryHierarchy())
-      .unwrap()
-      .catch((e) => {
-        alert(e);
-      });
-  }, []);
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event &&
@@ -36,7 +26,7 @@ export const TopAppBar = () => {
   return (
     <AppBar>
       <Box display={"flex"}>
-        <IconButton sx={{ color: "white" }} onClick={toggleDrawer(true)}>
+        <IconButton sx={{ color: "white" }} onClick={toggleDrawer()}>
           <MenuIcon />
         </IconButton>
         <IconButton
@@ -71,6 +61,7 @@ export const TopAppBar = () => {
           sideBarOpen={sideBarOpen}
           toggleDrawer={toggleDrawer}
           data={data}
+          setSideBarOpen={setSideBarOpen}
         />
       </Box>
     </AppBar>
