@@ -11,9 +11,10 @@ export const ProductsPage = () => {
   useEffect(() => {
     dispatch(GetCategoryProducts(category));
   }, [category]);
+
   const { data } = useSelector((state) => state.product);
 
-  if (data) {
+  if (data && data.length > 0) {
     return data.map((listing) => {
       return (
         <ProductCard
@@ -32,6 +33,8 @@ export const ProductsPage = () => {
         />
       );
     });
+  } else if (data && data.length === 0) {
+    return <div> No items found </div>;
   } else {
     return <div> loading {category}</div>;
   }

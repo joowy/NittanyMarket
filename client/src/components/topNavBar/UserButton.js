@@ -5,11 +5,14 @@ import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export const UserButton = () => {
+  const dispatch = useDispatch();
   const { userData } = useSelector(
     (state) =>
       //@ts-ignore
       state.auth
   );
+  const { loading, error, profileData } = useSelector((state) => state.profile);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -18,7 +21,6 @@ export const UserButton = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const dispatch = useDispatch();
 
   const logOut = useCallback(() => {
     dispatch(logout());
@@ -51,6 +53,11 @@ export const UserButton = () => {
         <MenuItem>
           <a href="/profile">Profile</a>
         </MenuItem>
+        {profileData?.SellerInfo ? (
+          <MenuItem>
+            <a href="/profile">List Product</a>
+          </MenuItem>
+        ) : null}
         <MenuItem>
           <a href="/login" onClick={logOut}>
             Log Out

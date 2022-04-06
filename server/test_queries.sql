@@ -76,5 +76,6 @@ FROM Product_Listing;
 SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
 
 
-
+SELECT * from Buyers where email not in (SELECT email from Sellers) 
 SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 
+SELECT * FROM   Users  Where email in (SELECT email from  Buyers)  and  email in (SELECT email from  Sellers); 
