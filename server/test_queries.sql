@@ -61,7 +61,8 @@ WHERE zipcode = 840;
 -- DROP TABLE Product_Listing;
 -- DROP TABLE Categories;
  
- 
+ DROP table Buyers; 
+ Drop table Sellers;
  
 SELECT *
 FROM Product_Listing where seller_email = "test@test.com";

@@ -111,12 +111,6 @@ class User(Resource):
             buyer_record = (
                 db.session.query(Buyers).filter(Buyers.email == email).first()
             )
-            seller_record = (
-                # Sellers.query.filter_by(username=email).first()
-                db.session.query(Sellers)
-                .filter(Sellers.email == email)
-                .first()
-            )
             if buyer_record:
                 # billing address
                 buyer_billing_address_record = (
@@ -178,16 +172,16 @@ class User(Resource):
                     "billing_address": billing_address_object,
                     "credit_card_last_four": last_four,
                 }
+
+            seller_record = (
+                db.session.query(Sellers).filter(Sellers.email == email).first()
+            )
+
             if seller_record:
-                # print(seller_record.email, seller_record.balance, "damn")
-
-                print(seller_record, dir(seller_record), "tikes")
-
                 seller_info = {
-                    "email": "email1tet",
-                    "balance": 100,
+                    "email": seller_record.email,
+                    "balance": seller_record.balance,
                 }
-                print("bro")
 
             return (
                 {"BuyerInfo": buyer_info, "SellerInfo": seller_info,},
