@@ -55,7 +55,7 @@ export const UserButton = () => {
         </MenuItem>
         {profileData?.SellerInfo ? (
           <MenuItem>
-            <a href="/profile">List Product</a>
+            <a href="/product/list">List Product</a>
           </MenuItem>
         ) : null}
         <MenuItem>

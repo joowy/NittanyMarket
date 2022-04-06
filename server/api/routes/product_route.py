@@ -98,6 +98,8 @@ class ProductCategory(Resource):
         return construct_category_heirachy()["Root"]["children"], 200
 
 
+
+
 @api.route("/list")
 class ListProduct(Resource):
     def post(self):

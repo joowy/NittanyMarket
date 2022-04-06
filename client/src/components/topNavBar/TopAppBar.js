@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LoginButton } from "./LoginButton";
 import { UserButton } from "./UserButton";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 export const TopAppBar = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
@@ -30,6 +31,7 @@ export const TopAppBar = () => {
           <MenuIcon />
         </IconButton>
         <IconButton
+          href="/login"
           aria-label="home-button"
           sx={[
             {
@@ -49,14 +51,21 @@ export const TopAppBar = () => {
               fontWeight: "bold",
               textDecoration: "none",
             }}
-            component={Link}
-            to="/"
           >
             Nittany Market
           </Typography>
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
-        {isLoggedIn ? <UserButton /> : <LoginButton />}
+        {isLoggedIn ? (
+          <Box>
+            <UserButton />
+            <IconButton href="/cart">
+              <ShoppingCartIcon sx={{ color: "white" }} />
+            </IconButton>
+          </Box>
+        ) : (
+          <LoginButton />
+        )}
         <SideBar
           sideBarOpen={sideBarOpen}
           toggleDrawer={toggleDrawer}

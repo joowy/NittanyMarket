@@ -8,8 +8,9 @@ export const LoginButton = () => {
       color="info"
       variant="outlined"
       sx={{ marginInline: 1, fontWeight: "bold", margin: 1 }}
-      component={Link}
-      to="/login"
+      //   component={Link}
+      //   to="/login"
+      href="/login"
     >
       Log In
     </Button>
