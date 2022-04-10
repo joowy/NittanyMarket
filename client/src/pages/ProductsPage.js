@@ -16,22 +16,24 @@ export const ProductsPage = () => {
 
   if (data && data.length > 0) {
     return data.map((listing) => {
-      return (
-        <ProductCard
-          key={listing.listing_id + listing.seller_email}
-          title={listing.title}
-          product_active_end={listing.product_active_end}
-          product_name={listing.product_name}
-          seller_email={listing.seller_email}
-          product_active_start={listing.product_active_start}
-          product_description={listing.product_description}
-          listing_id={listing.listing_id}
-          category_relationship={listing.category_relationship}
-          quantity={listing.quantity}
-          category={listing.category}
-          price={listing.price}
-        />
-      );
+      if (!listing.product_active_end) {
+        return (
+          <ProductCard
+            key={listing.listing_id + listing.seller_email}
+            title={listing.title}
+            product_name={listing.product_name}
+            seller_email={listing.seller_email}
+            product_active_start={listing.product_active_start}
+            product_description={listing.product_description}
+            listing_id={listing.listing_id}
+            category_relationship={listing.category_relationship}
+            quantity={listing.quantity}
+            category={listing.category}
+            price={listing.price}
+          />
+        );
+      }
+      return null;
     });
   } else if (data && data.length === 0) {
     return <div> No items found </div>;

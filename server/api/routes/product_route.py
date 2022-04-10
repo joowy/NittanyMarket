@@ -5,7 +5,7 @@ from typing import List
 from api.models import Categories, Product_Listing, db
 from flask import request
 from flask_restx import Namespace, Resource, fields
-from sqlalchemy import func
+from sqlalchemy import func,desc
 
 
 api = Namespace("Products", description="Products related routes")
@@ -80,10 +80,16 @@ class GetProducts(Resource):
                 db.session.query(Product_Listing)
                 .filter(Product_Listing.category.in_(sub_catagories))
                 .filter(Product_Listing.product_active_end == None)
+                .order_by(desc("product_active_start"))
                 .all()
             )
         else:
-            products_list = db.session.query(Product_Listing).limit(20).all()
+            products_list = (
+                db.session.query(Product_Listing)
+                .order_by(desc("product_active_start"))
+                .limit(20)
+                .all()
+            )
 
         out = []
         for i in products_list:

@@ -25,7 +25,7 @@ export const ListProduct = ({ categoriesList }) => {
     quantity: 1,
     category: "",
   };
-  const [autocompleteValue, setAutocompleteValue] = useState("");
+  const [autocompleteValue, setAutocompleteValue] = useState("Clothing");
   const [inputValue, setInputValue] = useState("");
   const [formValues, setFormValues] = useState(defaultValues);
 
@@ -34,8 +34,7 @@ export const ListProduct = ({ categoriesList }) => {
     formValues["category"] = autocompleteValue;
     try {
       const response = await axios.post("product/list", formValues);
-
-      console.log(response.data);
+      alert(response.data.msg);
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.msg) ||
@@ -126,7 +125,6 @@ export const ListProduct = ({ categoriesList }) => {
             name="price"
             type="number"
             value={formValues.price}
-            value={1}
             onChange={handleInputChange}
           />
         </Grid>
@@ -139,7 +137,6 @@ export const ListProduct = ({ categoriesList }) => {
             name="quantity"
             type="number"
             value={formValues.quantity}
-            value={1}
             onChange={handleInputChange}
           />
         </Grid>

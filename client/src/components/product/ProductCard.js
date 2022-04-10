@@ -1,13 +1,12 @@
-import * as React from "react";
+import { Button, CardActions } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import * as React from "react";
 
 export const ProductCard = ({
   title,
-  product_active_end,
   product_name,
   seller_email,
   product_active_start,
@@ -37,8 +36,16 @@ export const ProductCard = ({
           Seller: {seller_email}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {category}, {product_description}
+          Category: {category}
         </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Description: {product_description}
+        </Typography>
+        {product_active_start ? (
+          <Typography variant="body2" color="text.secondary">
+            Listed at : {product_active_start}
+          </Typography>
+        ) : null}
       </CardContent>
       <CardActions>
         <Button size="small">Buy</Button>
