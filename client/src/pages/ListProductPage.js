@@ -1,16 +1,20 @@
-import {
-  Autocomplete,
-  Divider,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Box } from "@mui/system";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
 import { ListProduct } from "components/product/ListProduct";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { axiosClient as axios } from "../api/axios.config";
 
 export const ListProductPage = () => {
+  const [categoriesList, setCategoriesList] = useState();
+  useEffect(() => {
+    const getCategoriesList = async () => {
+      let categoriesListRes = await axios.get(
+        "product/product_categories?flat=True"
+      );
+      setCategoriesList(categoriesListRes.data);
+    };
+    getCategoriesList();
+  }, []);
+
   return (
     <Stack
       width={"100%"}
@@ -18,7 +22,11 @@ export const ListProductPage = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <ListProduct />
+      {categoriesList ? (
+        <ListProduct categoriesList={categoriesList} />
+      ) : (
+        <div>Loading</div>
+      )}{" "}
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12}>
           <Typography component="h1" variant="h5">

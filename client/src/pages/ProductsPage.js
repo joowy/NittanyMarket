@@ -18,7 +18,7 @@ export const ProductsPage = () => {
     return data.map((listing) => {
       return (
         <ProductCard
-          key={listing.listing_id}
+          key={listing.listing_id + listing.seller_email}
           title={listing.title}
           product_active_end={listing.product_active_end}
           product_name={listing.product_name}

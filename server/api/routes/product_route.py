@@ -1,4 +1,5 @@
 from datetime import datetime
+import string
 from typing import List
 
 from api.models import Categories, Product_Listing, db
@@ -43,6 +44,14 @@ def construct_category_heirachy():
             else:
                 parent["children"] = [node]
     return results
+
+
+def get_categories_list():
+    categories = Categories.query.all()
+    categories_set = set()
+    for category in categories:
+        categories_set.add(category.category_name)
+    return categories_set
 
 
 @api.route("/category/", defaults={"category": None})
@@ -94,20 +103,20 @@ class ProductCategory(Resource):
         """
         return json with nested product categories 
         """
+        flat = request.args.get("flat", default=False, type=bool)
 
-        return construct_category_heirachy()["Root"]["children"], 200
-
-
+        if flat:
+            return list(get_categories_list())
+        else:
+            return construct_category_heirachy()["Root"]["children"], 200
 
 
 @api.route("/list")
 class ListProduct(Resource):
     def post(self):
-
         req_data = request.get_json()
 
         _seller_email = req_data.get("email")
-
         _category = req_data.get("category")
         _title = req_data.get("title")
         _product_name = req_data.get("product_name")
@@ -133,27 +142,37 @@ class ListProduct(Resource):
         except:
             _listing_id = 1
 
-        new_listing = Product_Listing(
-            seller_email=_seller_email,
-            listing_id=_listing_id,
-            category=_category,
-            title=_title,
-            product_name=_product_name,
-            product_description=_product_description,
-            price=_price,
-            quantity=_quantity,
-            product_active_start=(datetime.now()),
-        )
-        new_listing.save()
-
-        return (
-            {
-                "success": True,
-                "email": _product_name,
-                "msg": f"{_product_name} was successfully created, id: {new_listing.listing_id}",
-            },
-            200,
-        )
+        # check if req category is a category in data base
+        try:
+            categories_set = get_categories_list()
+            if _category not in categories_set:
+                raise Exception(f"{_category} not in database")
+            new_listing = Product_Listing(
+                seller_email=_seller_email,
+                listing_id=_listing_id,
+                category=_category,
+                title=_title,
+                product_name=_product_name,
+                product_description=_product_description,
+                price=_price,
+                quantity=_quantity,
+                product_active_start=(datetime.now()),
+            )
+            new_listing.save()
+            return (
+                {
+                    "success": True,
+                    "name": _product_name,
+                    "msg": f"{_product_name} was successfully created, id: {new_listing.listing_id}",
+                },
+                200,
+            )
+        except Exception as e:
+            print(e)
+            return (
+                {"success": False, "name": _product_name, "msg": f"{str(e)}",},
+                400,
+            )
 
 
 @api.route("/delist")
