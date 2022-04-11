@@ -43,34 +43,34 @@ export const MainLayout = () => {
       <TopAppBar />
       <Box sx={{ display: "block", height: "70px", width: "100%" }} />
       <Box
-        // sx={{ marginInline: 10, display: "flex" }}
         sx={{
           display: "flex",
           flexDirection: "column",
           minHeight: "95vh",
+          marginInline: 10,
         }}
       >
         <Grid container justifyContent="center" alignItems="center">
           <Outlet />
         </Grid>
-        <Box sx={{ display: "block", height: "70px", width: "100%" }} />
-        <Box
-          component="footer"
-          sx={{
-            py: 3,
-            px: 2,
-            mt: "auto",
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[200]
-                : theme.palette.grey[800],
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography variant="body1">Nittany Market</Typography>
-            <Copyright />
-          </Container>
-        </Box>
+      </Box>
+      <Box sx={{ display: "block", height: "70px", width: "100%" }} />
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          px: 2,
+          mt: "auto",
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[200]
+              : theme.palette.grey[800],
+        }}
+      >
+        <Container maxWidth="sm">
+          <Typography variant="body1">Nittany Market</Typography>
+          <Copyright />
+        </Container>
       </Box>
     </>
   );
