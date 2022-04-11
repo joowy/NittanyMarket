@@ -24,6 +24,11 @@ SELECT *
 FROM Ratings;
 SELECT *
 FROM JWTTokenBlocklist;
+
+SELECT *
+FROM Cart;
+
+
 SELECT *
 FROM Users U,
     Buyers B
@@ -51,6 +56,8 @@ PRAGMA table_info (Zipcode_Info);
 PRAGMA table_info (Reviews);
 PRAGMA table_info (Ratings);
 PRAGMA table_info (JWTTokenBlocklist);
+PRAGMA table_info (Cart);
+
 SELECT *
 FROM Zipcode_Info
 WHERE zipcode = 840;
@@ -64,6 +71,7 @@ WHERE zipcode = 840;
  DROP table Buyers; 
  Drop table Sellers;
  
+ Drop table Cart;
 
 -- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
 SELECT * FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";

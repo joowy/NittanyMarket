@@ -20,13 +20,13 @@ export const routes = [
       { path: "/profile", element: <ProfilePage /> },
       {
         path: "/product",
-        // element: <ProductsPage />,
+        // element: <Navigate to="/" />,
         children: [
           { path: "/product/category/:category", element: <ProductsPage /> },
           { path: "/product/category/", element: <ProductsPage /> },
-          { path: "/product/list/", element: <CreateProductListingPage /> },
         ],
       },
+      { path: "/product/list/", element: <CreateProductListingPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/404", element: <NotFound404 /> },
       { path: "*", element: <Navigate to="/404" /> },

@@ -2,11 +2,11 @@ import { Button, CardActions } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import { grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { useState } from "react";
 import { axiosClient as axios } from "../../api/axios.config";
-import { grey } from "@mui/material/colors";
-import { useEffect, useState } from "react";
 
 export const ProductCard = ({
   title,
@@ -22,7 +22,8 @@ export const ProductCard = ({
   price,
   mode,
 }) => {
-  const [listStatus, setListStatus] = useState(!!product_active_start);
+  const [listStatus, setListStatus] = useState(!!product_active_end);
+
   const changeListingStatus = async () => {
     const response = await axios.post("product/ChangeListingStatus", {
       email: seller_email,
