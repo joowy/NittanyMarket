@@ -2,10 +2,9 @@ import json
 
 from flask import Flask
 from flask_cors import CORS
-from sqlalchemy.sql import column, text
 
 from .config import Config
-from .models import Address, Buyers, Sellers, Users, db
+from .models import db
 from .routes import rest_api
 from .seed_database import seed_all
 
@@ -19,17 +18,10 @@ CORS(app)
 
 
 # Setup database
-
-
 @app.before_first_request
 def initialize_database():
     db.create_all()
     seed_all()
-
-
-"""
-   Custom responses
-"""
 
 
 @app.after_request

@@ -5,7 +5,7 @@ from typing import List
 from api.models import Categories, Product_Listing, db
 from flask import request
 from flask_restx import Namespace, Resource, fields
-from sqlalchemy import func,desc
+from sqlalchemy import func, desc
 
 
 api = Namespace("Products", description="Products related routes")
@@ -87,7 +87,7 @@ class GetProducts(Resource):
             products_list = (
                 db.session.query(Product_Listing)
                 .order_by(desc("product_active_start"))
-                .limit(20)
+                .limit(40)
                 .all()
             )
 
@@ -95,6 +95,21 @@ class GetProducts(Resource):
         for i in products_list:
             out.append(i.to_dict())
         return out, 200
+
+
+@api.route("/<user_email>")
+@api.doc(params={"user_email": "user's listed products"})
+class UserProducts(Resource):
+    def get(self, user_email):
+        out = (
+            db.session.query(Product_Listing)
+            .filter(Product_Listing.seller_email == user_email)
+            .order_by(desc("product_active_start"))
+            .all()
+        )
+        products = [x.toDICT() for x in out]
+
+        return products, 200
 
 
 @api.route("/product_categories")
@@ -181,7 +196,7 @@ class ListProduct(Resource):
             )
 
 
-@api.route("/delist")
+@api.route("/ChangeListingStatus")
 class DelistProduct(Resource):
     def post(self):
 
@@ -195,13 +210,18 @@ class DelistProduct(Resource):
             .filter(Product_Listing.listing_id == _listing_id)
         ).first()
 
-        product_listing_record.product_active_end = datetime.now()
+        # if product is active, change it to not active, vice versa.
+        product_listing_record.product_active_end = (
+            None
+            if product_listing_record.product_active_end != None
+            else datetime.now()
+        )
         db.session.commit()
         return (
             {
                 "success": True,
                 "listing_id": _listing_id,
-                "msg": f"item id {_listing_id} was successfully delisted",
+                "msg": f"item id {_listing_id} listing status successfully updated {str(product_listing_record.product_active_end)}",
             },
             200,
         )

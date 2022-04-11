@@ -10,13 +10,13 @@ export const ProductsPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetCategoryProducts(category));
-  }, [category]);
+  }, [category, dispatch]);
 
   const { data } = useSelector((state) => state.product);
 
   if (data && data.length > 0) {
     return data.map((listing) => {
-      if (!listing.product_active_end) {
+      if (listing.product_active_end === null) {
         return (
           <ProductCard
             key={listing.listing_id + listing.seller_email}
@@ -30,9 +30,12 @@ export const ProductsPage = () => {
             quantity={listing.quantity}
             category={listing.category}
             price={listing.price}
+            product_active_end={undefined}
+            mode={undefined}
           />
         );
       }
+
       return null;
     });
   } else if (data && data.length === 0) {

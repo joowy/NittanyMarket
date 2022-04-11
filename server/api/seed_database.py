@@ -4,21 +4,7 @@ import csv
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 
-from .models import (
-    db,
-    Address,
-    Users,
-    Buyers,
-    Sellers,
-    Local_Vendors,
-    Categories,
-    Product_Listing,
-    Orders,
-    Credit_Cards,
-    Zipcode_Info,
-    Reviews,
-    Ratings,
-)
+from .models import db
 
 file_path = os.path.dirname(os.path.realpath(__file__))
 mock_data_dir = os.path.join(file_path, "mock")

@@ -35,6 +35,7 @@ export const ListProduct = ({ categoriesList }) => {
     try {
       const response = await axios.post("product/list", formValues);
       alert(response.data.msg);
+      window.location.reload();
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.msg) ||

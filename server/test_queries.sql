@@ -64,8 +64,9 @@ WHERE zipcode = 840;
  DROP table Buyers; 
  Drop table Sellers;
  
-SELECT *
-FROM Product_Listing where seller_email = "test@test.com";
+
+-- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
+SELECT * FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
 
 SELECT   DISTINCT category
 FROM Product_Listing  

@@ -1,5 +1,5 @@
 import { CartPage } from "pages/CartPage";
-import { ListProductPage } from "pages/ListProductPage";
+import { CreateProductListingPage } from "pages/CreateProductListingPage";
 import { NotFound404 } from "pages/NotFound404";
 import { ProductsPage } from "pages/ProductsPage";
 import { ProfilePage } from "pages/ProfilePage";
@@ -24,7 +24,7 @@ export const routes = [
         children: [
           { path: "/product/category/:category", element: <ProductsPage /> },
           { path: "/product/category/", element: <ProductsPage /> },
-          { path: "/product/list/", element: <ListProductPage /> },
+          { path: "/product/list/", element: <CreateProductListingPage /> },
         ],
       },
       { path: "/cart", element: <CartPage /> },
