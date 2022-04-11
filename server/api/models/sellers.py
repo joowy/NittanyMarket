@@ -2,10 +2,10 @@ from .users import Users
 from . import db
 
 
-class Sellers(Users):
+class Sellers(db.Model):
     __tablename__ = "Sellers"
     email = db.Column(
-        db.ForeignKey("Users.email", onupdate="CASCADE", ondelete="CASCADE"),
+        db.ForeignKey(Users.email, onupdate="CASCADE", ondelete="CASCADE"),
         primary_key=True,
     )
     routing_number = db.Column(db.String)

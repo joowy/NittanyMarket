@@ -1,6 +1,8 @@
 from . import db
 from .users import Users
 
+from sqlalchemy_serializer import SerializerMixin
+
 
 class Buyers(Users):
     __tablename__ = "Buyers"
