@@ -1,21 +1,28 @@
 from datetime import datetime
 from typing import List
 
-from api.models import Cart, db
+from api.models import Cart, db, Product_Listing
 from flask import request
-from flask_restx import Namespace, Resource, fields
-from sqlalchemy import func
+from flask_restx import Namespace, Resource
 
 api = Namespace("cart", description="cart routes")
 
 
-@api.route("/<user>")
+@api.route("/", defaults={"user_email": None})
+@api.route("/<user_email>")
 class CartRoute(Resource):
-    def get(self,user):
-        print(user)
-        return [], 200
+    def get(self, user_email):
+        user_cart_items = (
+            db.session.query(Cart)
+            .filter(Cart.buyer_email == "abattrick5k@nsu.edu")
+            .all()
+        )
 
-    def post(self):
+        print(user_cart_items)
+        # Product_Listing.
+        return ["s"], 200
+
+    def post(self, user_email):
         req_data = request.get_json()
 
         _buyer_email = req_data.get("buyer_email")
