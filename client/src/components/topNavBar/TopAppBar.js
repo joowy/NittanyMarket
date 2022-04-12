@@ -70,7 +70,7 @@ export const TopAppBar = () => {
         {isLoggedIn ? (
           <Box mr={3}>
             <UserButton />
-            <IconButton aria-label="cart">
+            <IconButton href="/cart" aria-label="cart">
               <StyledBadge
                 badgeContent={cartData?.length}
                 sx={{ color: "white" }}
