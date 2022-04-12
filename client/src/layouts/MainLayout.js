@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Grid, Typography } from "@mui/material";
+import { Box, CssBaseline, Grid } from "@mui/material";
 import { Footer } from "components/footer/Footer";
 import { TopAppBar } from "components/topNavBar/TopAppBar";
 import React, { useEffect } from "react";
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { GetCategoryHierarchy } from "slices/productCategoriesHierarchySlice";
 import { GetProfileData } from "slices/userProfileSlice";
-
+import { getCart } from "../slices/cartSlice";
 export const MainLayout = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
@@ -23,6 +23,8 @@ export const MainLayout = () => {
         .catch((e) => {
           alert(e);
         });
+
+      dispatch(getCart(userData.user.email));
     }
   }, [dispatch, userData]);
 

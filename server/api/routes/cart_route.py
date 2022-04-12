@@ -33,13 +33,13 @@ class CartRoute(Resource):
         _buyer_email = req_data.get("buyer_email")
         _product_listing_email = req_data.get("product_listing_email")
         _product_listing_id = req_data.get("product_listing_id")
-        _quantity = req_data.get("quantity")
+        _cart_quantity = req_data.get("cart_quantity")
 
         new_cart_item = Cart(
             buyer_email=_buyer_email,
             product_listing_email=_product_listing_email,
             product_listing_id=_product_listing_id,
-            quantity=_quantity,
+            cart_quantity=_cart_quantity,
         )
         new_cart_item.save()
         return (
@@ -50,14 +50,18 @@ class CartRoute(Resource):
             200,
         )
 
-    def delete(self, user_email):
+
+@api.route("/delete", defaults={"user_email": None})
+class DeleteFromCart(Resource):
+    def post(self, user_email):
 
         req_data = request.get_json()
+        print(req_data, request, "??????????//")
 
         _buyer_email = req_data.get("buyer_email")
         _product_listing_email = req_data.get("product_listing_email")
         _product_listing_id = req_data.get("product_listing_id")
-
+        print("herehrher")
         obj = (
             db.session.query(Cart)
             .filter(Cart.buyer_email == _buyer_email)
@@ -76,4 +80,3 @@ class CartRoute(Resource):
             },
             200,
         )
-

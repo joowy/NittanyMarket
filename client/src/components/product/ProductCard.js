@@ -1,4 +1,5 @@
-import { Button, CardActions } from "@mui/material";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { Button, CardActions, IconButton } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
 import { axiosClient as axios } from "../../api/axios.config";
-
 export const ProductCard = ({
   title,
   product_name,
@@ -25,11 +25,10 @@ export const ProductCard = ({
   const [listStatus, setListStatus] = useState(!!product_active_end);
 
   const changeListingStatus = async () => {
-    const response = await axios.post("product/ChangeListingStatus", {
+    await axios.post("product/ChangeListingStatus", {
       email: seller_email,
       listing_id: listing_id,
     });
-    console.log(response.data);
     setListStatus(!listStatus);
   };
 
@@ -94,7 +93,10 @@ export const ProductCard = ({
             </Button>
           )
         ) : (
-          <Button size="small">Buy</Button>
+          <IconButton>
+            <AddShoppingCartIcon />
+            <Typography variant={"body2"}>Add to Cart</Typography>
+          </IconButton>
         )}
       </CardActions>
     </Card>

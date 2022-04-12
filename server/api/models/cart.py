@@ -15,7 +15,7 @@ class Cart(db.Model):
         db.ForeignKey("Product_Listing.listing_id", onupdate="CASCADE"),
         primary_key=True,
     )
-    quantity = db.Column(db.Integer)
+    cart_quantity = db.Column(db.Integer)
 
     def __repr__(self):
         return f"cart item  {self.product_listing_email , self.product_listing_id , self.quantity }"
@@ -29,6 +29,6 @@ class Cart(db.Model):
         cls_dict["buyer_email"] = self.buyer_email
         cls_dict["product_listing_email"] = self.product_listing_email
         cls_dict["product_listing_id"] = self.product_listing_id
-        cls_dict["quantity"] = self.quantity
+        cls_dict["cart_quantity"] = self.cart_quantity
 
         return cls_dict

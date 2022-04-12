@@ -24,12 +24,11 @@ export const removeFromCart = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const response = await axios.delete(`/cart`, {
+      const response = await axios.post(`/cart/delete`, {
         buyer_email: buyer_email,
         product_listing_email: product_listing_email,
         product_listing_id: product_listing_id,
       });
-
       return response.data;
     } catch (error) {
       const message =

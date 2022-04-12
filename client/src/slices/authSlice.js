@@ -58,7 +58,6 @@ export const updatePassword = createAsyncThunk(
           },
         }
       );
-      console.log(response);
       return response;
     } catch (error) {
       const message =

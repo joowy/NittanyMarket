@@ -41,7 +41,7 @@ export const ListProduct = ({ categoriesList }) => {
         (error.response && error.response.data && error.response.data.msg) ||
         error.msg ||
         error.toString();
-      console.log(message);
+      alert(message);
     }
   };
   const handleInputChange = (e) => {

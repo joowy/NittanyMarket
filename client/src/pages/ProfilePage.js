@@ -8,17 +8,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePassword } from "slices/authSlice";
-import { GetProfileData } from "slices/userProfileSlice";
 export const ProfilePage = () => {
   const dispatch = useDispatch();
   const [editPassword, setEditPassword] = useState(false);
   const [passwordField, setPasswordField] = useState("");
 
-  const { loading, error, profileData } = useSelector((state) => state.profile);
-  const { userData, isLoggedIn } = useSelector((state) => state.auth);
+  const { loading, profileData } = useSelector((state) => state.profile);
 
   const handleChange = (e) => {
     setPasswordField(e.target.value);
@@ -28,7 +26,6 @@ export const ProfilePage = () => {
   };
   const updatePasswordClick = () => {
     setEditPassword(false);
-    console.log(passwordField, "profilepage");
     dispatch(updatePassword(passwordField))
       .unwrap()
       .catch((e) => {
