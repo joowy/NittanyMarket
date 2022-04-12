@@ -74,7 +74,7 @@ WHERE zipcode = 840;
  Drop table Cart;
 
 -- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
-SELECT * FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
+SELECT * FROM Product_Listing where seller_email = "amaccathayam@nsu.edu";
 
 SELECT   DISTINCT category
 FROM Product_Listing  

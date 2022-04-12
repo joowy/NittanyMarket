@@ -36,6 +36,7 @@ export const MainLayout = () => {
           display: "flex",
           flexDirection: "column",
           minHeight: "95vh",
+          marginInline: 10,
         }}
       >
         <Grid container justifyContent="center" alignItems="center">
