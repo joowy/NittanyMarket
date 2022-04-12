@@ -1,9 +1,10 @@
 from . import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_serializer import SerializerMixin
 
 
-class Users(db.Model):
+class Users(db.Model, SerializerMixin):
     __tablename__ = "Users"
 
     email = db.Column(db.String, nullable=False, primary_key=True)

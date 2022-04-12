@@ -1,10 +1,11 @@
 from datetime import datetime
+import string
 from typing import List
 
 from api.models import Categories, Product_Listing, db
 from flask import request
 from flask_restx import Namespace, Resource, fields
-from sqlalchemy import func
+from sqlalchemy import func, desc
 
 
 api = Namespace("Products", description="Products related routes")
@@ -45,6 +46,14 @@ def construct_category_heirachy():
     return results
 
 
+def get_categories_list():
+    categories = Categories.query.all()
+    categories_set = set()
+    for category in categories:
+        categories_set.add(category.category_name)
+    return categories_set
+
+
 @api.route("/category/", defaults={"category": None})
 @api.route("/category/<category>")
 @api.doc(params={"category": "category name, empty to get all listings not filtered"})
@@ -71,15 +80,36 @@ class GetProducts(Resource):
                 db.session.query(Product_Listing)
                 .filter(Product_Listing.category.in_(sub_catagories))
                 .filter(Product_Listing.product_active_end == None)
+                .order_by(desc("product_active_start"))
                 .all()
             )
         else:
-            products_list = db.session.query(Product_Listing).limit(20).all()
+            products_list = (
+                db.session.query(Product_Listing)
+                .order_by(desc("product_active_start"))
+                .limit(40)
+                .all()
+            )
 
         out = []
         for i in products_list:
             out.append(i.to_dict())
         return out, 200
+
+
+@api.route("/<user_email>")
+@api.doc(params={"user_email": "user's listed products"})
+class UserProducts(Resource):
+    def get(self, user_email):
+        out = (
+            db.session.query(Product_Listing)
+            .filter(Product_Listing.seller_email == user_email)
+            .order_by(desc("product_active_start"))
+            .all()
+        )
+        products = [x.toDICT() for x in out]
+
+        return products, 200
 
 
 @api.route("/product_categories")
@@ -94,18 +124,20 @@ class ProductCategory(Resource):
         """
         return json with nested product categories 
         """
+        flat = request.args.get("flat", default=False, type=bool)
 
-        return construct_category_heirachy()["Root"]["children"], 200
+        if flat:
+            return list(get_categories_list())
+        else:
+            return construct_category_heirachy()["Root"]["children"], 200
 
 
 @api.route("/list")
 class ListProduct(Resource):
     def post(self):
-
         req_data = request.get_json()
 
         _seller_email = req_data.get("email")
-
         _category = req_data.get("category")
         _title = req_data.get("title")
         _product_name = req_data.get("product_name")
@@ -131,30 +163,40 @@ class ListProduct(Resource):
         except:
             _listing_id = 1
 
-        new_listing = Product_Listing(
-            seller_email=_seller_email,
-            listing_id=_listing_id,
-            category=_category,
-            title=_title,
-            product_name=_product_name,
-            product_description=_product_description,
-            price=_price,
-            quantity=_quantity,
-            product_active_start=(datetime.now()),
-        )
-        new_listing.save()
+        # check if req category is a category in data base
+        try:
+            categories_set = get_categories_list()
+            if _category not in categories_set:
+                raise Exception(f"{_category} not in database")
+            new_listing = Product_Listing(
+                seller_email=_seller_email,
+                listing_id=_listing_id,
+                category=_category,
+                title=_title,
+                product_name=_product_name,
+                product_description=_product_description,
+                price=_price,
+                quantity=_quantity,
+                product_active_start=(datetime.now()),
+            )
+            new_listing.save()
+            return (
+                {
+                    "success": True,
+                    "name": _product_name,
+                    "msg": f"{_product_name} was successfully created, id: {new_listing.listing_id}",
+                },
+                200,
+            )
+        except Exception as e:
+            print(e)
+            return (
+                {"success": False, "name": _product_name, "msg": f"{str(e)}",},
+                400,
+            )
 
-        return (
-            {
-                "success": True,
-                "email": _product_name,
-                "msg": f"{_product_name} was successfully created, id: {new_listing.listing_id}",
-            },
-            200,
-        )
 
-
-@api.route("/delist")
+@api.route("/ChangeListingStatus")
 class DelistProduct(Resource):
     def post(self):
 
@@ -168,13 +210,18 @@ class DelistProduct(Resource):
             .filter(Product_Listing.listing_id == _listing_id)
         ).first()
 
-        product_listing_record.product_active_end = datetime.now()
+        # if product is active, change it to not active, vice versa.
+        product_listing_record.product_active_end = (
+            None
+            if product_listing_record.product_active_end != None
+            else datetime.now()
+        )
         db.session.commit()
         return (
             {
                 "success": True,
                 "listing_id": _listing_id,
-                "msg": f"item id {_listing_id} was successfully delisted",
+                "msg": f"item id {_listing_id} listing status successfully updated {str(product_listing_record.product_active_end)}",
             },
             200,
         )

@@ -1,6 +1,5 @@
-
-
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
 
 
@@ -17,3 +16,4 @@ from .zipcode_info import Zipcode_Info
 from .reviews import Reviews
 from .rating import Ratings
 from .jwttokenblocklist import JWTTokenBlocklist
+from .cart import Cart

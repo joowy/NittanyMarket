@@ -44,7 +44,19 @@ class Product_Listing(db.Model, SerializerMixin):
         cls_dict["product_description"] = self.product_description
         cls_dict["price"] = self.price
         cls_dict["quantity"] = self.quantity
-        cls_dict["product_active_start"] = self.product_active_start
-        cls_dict["product_active_end"] = self.product_active_end
+        if self.product_active_start:
+            cls_dict["product_active_start"] = self.product_active_start.strftime(
+                "%m/%d/%Y"
+            )
+        else:
+            cls_dict["product_active_start"] = self.product_active_start
 
+        if self.product_active_end:
+
+            cls_dict["product_active_end"] = self.product_active_end.strftime(
+                "%m/%d/%Y"
+            )
+        else:
+            cls_dict["product_active_end"] = self.product_active_end
+        # print(cls_dict)
         return cls_dict

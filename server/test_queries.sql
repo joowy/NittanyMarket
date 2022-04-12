@@ -24,6 +24,11 @@ SELECT *
 FROM Ratings;
 SELECT *
 FROM JWTTokenBlocklist;
+
+SELECT *
+FROM Cart;
+
+
 SELECT *
 FROM Users U,
     Buyers B
@@ -51,6 +56,8 @@ PRAGMA table_info (Zipcode_Info);
 PRAGMA table_info (Reviews);
 PRAGMA table_info (Ratings);
 PRAGMA table_info (JWTTokenBlocklist);
+PRAGMA table_info (Cart);
+
 SELECT *
 FROM Zipcode_Info
 WHERE zipcode = 840;
@@ -61,10 +68,13 @@ WHERE zipcode = 840;
 -- DROP TABLE Product_Listing;
 -- DROP TABLE Categories;
  
+ DROP table Buyers; 
+ Drop table Sellers;
  
- 
-SELECT *
-FROM Product_Listing where seller_email = "test@test.com";
+ Drop table Cart;
+
+-- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
+SELECT * FROM Product_Listing where seller_email = "amaccathayam@nsu.edu";
 
 SELECT   DISTINCT category
 FROM Product_Listing  
@@ -76,5 +86,6 @@ FROM Product_Listing;
 SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
 
 
-
+SELECT * from Buyers where email not in (SELECT email from Sellers) 
 SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 
+SELECT * FROM   Users  Where email in (SELECT email from  Buyers)  and  email in (SELECT email from  Sellers); 
