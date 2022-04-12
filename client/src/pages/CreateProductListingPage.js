@@ -29,7 +29,12 @@ export const CreateProductListingPage = () => {
   }, [userData.user.email]);
 
   return (
-    <Stack spacing={2} alignItems="center" justifyContent="center">
+    <Stack
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ width: "80%" }}
+    >
       {categoriesList ? (
         <ListProduct categoriesList={categoriesList} />
       ) : (

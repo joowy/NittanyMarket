@@ -10,7 +10,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { register } from "slices/authSlice";
@@ -19,12 +19,10 @@ const theme = createTheme();
 
 export const Register = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
 
     const data = new FormData(event.currentTarget);
     let object = {};
@@ -49,7 +47,6 @@ export const Register = () => {
       })
       .catch((e) => {
         alert(e);
-        setLoading(false);
       });
   };
   if (isLoggedIn) {
