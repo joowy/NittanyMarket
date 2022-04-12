@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosClient as axios } from "../api/axios.config";
 
-const userCredential = JSON.parse(localStorage.getItem("user_credential"));
-
 export const GetCategoryHierarchy = createAsyncThunk(
   "GetCategoryHierarchy",
   async (thunkAPI) => {
