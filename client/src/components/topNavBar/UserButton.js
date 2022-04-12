@@ -3,15 +3,13 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { logout } from "slices/authSlice";
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const UserButton = () => {
   const dispatch = useDispatch();
-  const { userData } = useSelector(
-    (state) =>
-      //@ts-ignore
-      state.auth
-  );
-  const { loading, error, profileData } = useSelector((state) => state.profile);
+  const { userData } = useSelector((state) => state.auth);
+  const { profileData } = useSelector((state) => state.profile);
+  let navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -50,18 +48,18 @@ export const UserButton = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem>
-          <a href="/profile">Profile</a>
-        </MenuItem>
+        <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
         {profileData?.SellerInfo ? (
-          <MenuItem>
-            <a href="/product/list">List Product</a>
+          <MenuItem onClick={() => navigate("/product/list")}>
+            List Product
           </MenuItem>
         ) : null}
-        <MenuItem>
-          <a href="/login" onClick={logOut}>
-            Log Out
-          </a>
+        <MenuItem
+          onClick={() => {
+            logOut();
+          }}
+        >
+          Log Out
         </MenuItem>
       </Menu>
     </>

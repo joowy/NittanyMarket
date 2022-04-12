@@ -43,8 +43,8 @@ export const MainLayout = () => {
           <Outlet />
         </Grid>
         <Box sx={{ display: "block", height: "70px", width: "100%" }} />
-        <Footer />
       </Box>
+      <Footer />
     </>
   );
 };

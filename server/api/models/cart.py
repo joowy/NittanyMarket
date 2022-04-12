@@ -26,7 +26,8 @@ class Cart(db.Model):
 
     def toDICT(self):
         cls_dict = {}
-        cls_dict["email"] = self.product_listing_email
+        cls_dict["buyer_email"] = self.buyer_email
+        cls_dict["product_listing_email"] = self.product_listing_email
         cls_dict["product_listing_id"] = self.product_listing_id
         cls_dict["quantity"] = self.quantity
 

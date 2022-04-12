@@ -13,14 +13,19 @@ api = Namespace("cart", description="cart routes")
 class CartRoute(Resource):
     def get(self, user_email):
         user_cart_items = (
-            db.session.query(Cart)
-            .filter(Cart.buyer_email == "abattrick5k@nsu.edu")
+            db.session.query(Cart, Product_Listing)
+            .filter(Cart.product_listing_email == Product_Listing.seller_email)
+            .filter(Cart.product_listing_id == Product_Listing.listing_id)
+            .filter(Cart.buyer_email == user_email)
             .all()
         )
-
-        print(user_cart_items)
-        # Product_Listing.
-        return ["s"], 200
+        records = []
+        for i in user_cart_items:
+            record = dict()
+            record.update(i[1].toDICT())
+            record.update(i[0].toDICT())
+            records.append(record)
+        return records, 200
 
     def post(self, user_email):
         req_data = request.get_json()
@@ -45,7 +50,7 @@ class CartRoute(Resource):
             200,
         )
 
-    def delete(self):
+    def delete(self, user_email):
 
         req_data = request.get_json()
 
@@ -53,9 +58,15 @@ class CartRoute(Resource):
         _product_listing_email = req_data.get("product_listing_email")
         _product_listing_id = req_data.get("product_listing_id")
 
-        db.session.query(Cart).filter(Cart.buyer_email == _buyer_email).filter(
-            Cart.product_listing_email == _product_listing_email
-        ).filter(Cart.product_listing_id == _product_listing_id).delete()
+        obj = (
+            db.session.query(Cart)
+            .filter(Cart.buyer_email == _buyer_email)
+            .filter(Cart.product_listing_email == _product_listing_email)
+            .filter(Cart.product_listing_id == _product_listing_id)
+            .one()
+        )
+
+        db.session.delete(obj)
         db.session.commit()
 
         return (
