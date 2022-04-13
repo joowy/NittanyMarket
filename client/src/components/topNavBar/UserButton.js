@@ -57,6 +57,7 @@ export const UserButton = () => {
         <MenuItem
           onClick={() => {
             logOut();
+            navigate("/login");
           }}
         >
           Log Out

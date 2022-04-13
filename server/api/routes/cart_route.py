@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import List
 
-from api.models import Cart, db, Product_Listing
+from api.models import Cart, db, Product_Listing, Sellers, Orders
 from flask import request
 from flask_restx import Namespace, Resource
+from datetime import datetime
 
 api = Namespace("cart", description="cart routes")
 
@@ -61,7 +62,6 @@ class DeleteFromCart(Resource):
         _buyer_email = req_data.get("buyer_email")
         _product_listing_email = req_data.get("product_listing_email")
         _product_listing_id = req_data.get("product_listing_id")
-        print("herehrher")
         obj = (
             db.session.query(Cart)
             .filter(Cart.buyer_email == _buyer_email)
@@ -80,3 +80,53 @@ class DeleteFromCart(Resource):
             },
             200,
         )
+
+
+@api.route("/placeorder")
+class PlaceOrder(Resource):
+    def post(self):
+        req_data = request.get_json()
+        _buyer_email = req_data.get("buyer_email")
+        cart_items = (
+            db.session.query(Cart).filter(Cart.buyer_email == _buyer_email).all()
+        )
+
+        for item in cart_items:
+            # find item decrease quantity
+            listing = (
+                db.session.query(Product_Listing)
+                .filter(Product_Listing.seller_email == item.product_listing_email)
+                .filter(Product_Listing.listing_id == item.product_listing_id)
+                .first()
+            )
+            # find seller increase their balance
+            seller = (
+                db.session.query(Sellers)
+                .filter(Sellers.email == listing.seller_email)
+                .first()
+            )
+            cost = item.cart_quantity * listing.price
+            # increase seller balance
+            seller.balance += cost
+            # decrease listing quantity
+            listing.quantity -= item.cart_quantity
+            new_order = Orders(
+                seller_email=seller.email,
+                listing_id=item.product_listing_id,
+                buyer_email=_buyer_email,
+                date=datetime.now(),
+                quantity=item.cart_quantity,
+                payment=cost,
+            )
+            new_order.save()
+
+        # remove from cart
+        db.session.query(Cart).filter(Cart.buyer_email == _buyer_email).delete()
+
+        # save changes
+        db.session.commit()
+        return (
+            {"success": True, "msg": f"order successfully placed"},
+            200,
+        )
+

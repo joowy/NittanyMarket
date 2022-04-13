@@ -39,17 +39,33 @@ export const removeFromCart = createAsyncThunk(
     }
   }
 );
+
+// export const placeOrder = createAsyncThunk(
+//   "placeOrder",
+
+//   async (buyer_email, thunkAPI) => {}
+// );
+
 const cartData = {
   loading: true,
   error: null,
   data: null,
+  total: 0,
 };
 const initialState = cartData;
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: {},
+  reducers: {
+    setTotal(state) {
+      let cost = 0;
+      for (const cartItem of state.data) {
+        cost += cartItem.cart_quantity * cartItem.price;
+      }
+      state.total = cost;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getCart.pending, (state, action) => {
       state.loading = true;
@@ -68,5 +84,5 @@ const cartSlice = createSlice({
     });
   },
 });
-const { reducer } = cartSlice;
+export const { reducer, actions } = cartSlice;
 export default reducer;

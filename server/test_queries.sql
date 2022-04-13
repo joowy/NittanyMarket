@@ -76,16 +76,7 @@ WHERE zipcode = 840;
 -- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
 SELECT * FROM Product_Listing where seller_email = "amaccathayam@nsu.edu";
 
-SELECT   DISTINCT category
-FROM Product_Listing  
+ SELECT *
+FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;
 
-
-SELECT DISTINCT category
-FROM Product_Listing;
-
-SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
-
-
-SELECT * from Buyers where email not in (SELECT email from Sellers) 
-SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 
-SELECT * FROM   Users  Where email in (SELECT email from  Buyers)  and  email in (SELECT email from  Sellers); 
+DELETE FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;

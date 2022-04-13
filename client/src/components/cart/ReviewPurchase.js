@@ -1,11 +1,11 @@
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { Divider, Grid, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../slices/cartSlice";
-export const ReviewPurchase = () => {
+import { actions } from "../../slices/cartSlice";
+export const ReviewPurchase = ({ data, cost }) => {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.cart);
 
   const handleRemoveFromCart = (
     buyer_email,
@@ -18,12 +18,12 @@ export const ReviewPurchase = () => {
     window.location.reload();
   };
 
-  let cost = 0;
-  if (data) {
-    for (const cartItem of data) {
-      cost += cartItem.cart_quantity * cartItem.price;
+  useEffect(() => {
+    if (data) {
+      dispatch(actions.setTotal());
     }
-  }
+  }, [data, dispatch]);
+
   return (
     <Stack
       spacing={2}

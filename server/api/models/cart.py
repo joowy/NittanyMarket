@@ -18,7 +18,7 @@ class Cart(db.Model):
     cart_quantity = db.Column(db.Integer)
 
     def __repr__(self):
-        return f"cart item  {self.product_listing_email , self.product_listing_id , self.quantity }"
+        return f"cart item  {self.product_listing_email , self.product_listing_id , self.cart_quantity }"
 
     def save(self):
         db.session.add(self)

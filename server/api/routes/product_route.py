@@ -80,12 +80,15 @@ class GetProducts(Resource):
                 db.session.query(Product_Listing)
                 .filter(Product_Listing.category.in_(sub_catagories))
                 .filter(Product_Listing.product_active_end == None)
+                .filter(Product_Listing.quantity > 0)
                 .order_by(desc("product_active_start"))
                 .all()
             )
         else:
             products_list = (
                 db.session.query(Product_Listing)
+                .filter(Product_Listing.product_active_end == None)
+                .filter(Product_Listing.quantity > 0)
                 .order_by(desc("product_active_start"))
                 .limit(40)
                 .all()
