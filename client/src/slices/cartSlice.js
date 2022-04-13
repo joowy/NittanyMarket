@@ -40,11 +40,11 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
-// export const placeOrder = createAsyncThunk(
-//   "placeOrder",
+export const placeOrder = createAsyncThunk(
+  "placeOrder",
 
-//   async (buyer_email, thunkAPI) => {}
-// );
+  async (buyer_email, thunkAPI) => {}
+);
 
 const cartData = {
   loading: true,

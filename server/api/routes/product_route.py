@@ -23,7 +23,9 @@ def construct_category_heirachy():
     # create list (parent, child) tuple easier to work with
     lst: List[(str, str)] = []
     for relationship in categories:
-        lst.append((relationship.parent_category, relationship.category_name))
+        lst.append(
+            (relationship.parent_category.strip(), relationship.category_name.strip())
+        )
     results = {}
     for record in lst:
         parent_product = record[0]
@@ -43,10 +45,11 @@ def construct_category_heirachy():
                 parent["children"].append(node)
             else:
                 parent["children"] = [node]
+    print(results.keys())
     return results
 
 
-def get_categories_list():
+def get_flat_categories_list():
     categories = Categories.query.all()
     categories_set = set()
     for category in categories:
@@ -130,7 +133,7 @@ class ProductCategory(Resource):
         flat = request.args.get("flat", default=False, type=bool)
 
         if flat:
-            return list(get_categories_list())
+            return list(get_flat_categories_list())
         else:
             return construct_category_heirachy()["Root"]["children"], 200
 
@@ -168,7 +171,7 @@ class ListProduct(Resource):
 
         # check if req category is a category in data base
         try:
-            categories_set = get_categories_list()
+            categories_set = get_flat_categories_list()
             if _category not in categories_set:
                 raise Exception(f"{_category} not in database")
             new_listing = Product_Listing(
@@ -228,3 +231,19 @@ class DelistProduct(Resource):
             },
             200,
         )
+
+
+@api.route("/<seller_email>/<listing_id>")
+class GetProduct(Resource):
+    def get(self, seller_email, listing_id):
+
+        print(seller_email, listing_id)
+        listing = (
+            db.session.query(Product_Listing)
+            .filter(Product_Listing.seller_email == seller_email)
+            .filter(Product_Listing.listing_id)
+            .first()
+        )
+        print(listing.toDICT())
+        return [], 200
+

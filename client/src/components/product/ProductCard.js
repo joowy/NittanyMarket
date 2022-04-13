@@ -8,7 +8,10 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
+=======
+>>>>>>> 83349ceda1167eae819981cabbcc2327c56f2c98
 import { axiosClient as axios } from "../../api/axios.config";
 
 export const ProductCard = ({
@@ -126,6 +129,7 @@ export const ProductCard = ({
               <AddShoppingCartIcon />
               <Typography variant={"body2"}>Add to Cart</Typography>
             </IconButton>
+<<<<<<< HEAD
             <Menu
               id="long-menu"
               MenuListProps={{
@@ -143,6 +147,18 @@ export const ProductCard = ({
             >
               <MenuItem>xxx</MenuItem>
             </Menu>
+=======
+            {/* <Menu
+              id="basic-menu"
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </Menu> */}
+>>>>>>> 83349ceda1167eae819981cabbcc2327c56f2c98
           </>
         ) : null}
       </CardActions>
