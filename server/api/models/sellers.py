@@ -16,7 +16,7 @@ class Sellers(db.Model):
     }
 
     def __repr__(self):
-        return f"sellers email {self.email} {self.first_name, self.last_name}"
+        return f"sellers email {self.email}  "
 
     def save(self):
         db.session.add(self)

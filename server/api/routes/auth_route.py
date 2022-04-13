@@ -12,10 +12,7 @@ from ..config import Config
 
 api = Namespace("Auth", description="Authentication for users")
 
-"""
-    Flask-Restx models for api request and response data
-"""
-
+# https://github.com/app-generator/flask-api-sample/tree/8f64e8cc942fc7ff436900fb4f099b1f88f4642c
 signup_model = api.model(
     "SignUpModel",
     {
@@ -41,7 +38,7 @@ update_password_model = api.model(
     {"password": fields.String(required=True, min_length=4, max_length=16),},
 )
 
-
+# https://github.com/app-generator/flask-api-sample/tree/8f64e8cc942fc7ff436900fb4f099b1f88f4642c
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):

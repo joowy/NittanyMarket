@@ -3,7 +3,7 @@ from . import db
 
 class Orders(db.Model):
     __tablename__ = "Orders"
-    transaction_id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.Integer, primary_key=True,)
     seller_email = db.Column(
         db.ForeignKey("Sellers.email", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
@@ -19,7 +19,7 @@ class Orders(db.Model):
     # FK
 
     def __repr__(self):
-        return f"buyer_email seller_email listing_id {self.buyer_email,self.seller_email, self.listing_id}"
+        return f"transaction_id buyer_email seller_email listing_id { self.transaction_id,self.buyer_email,self.seller_email, self.listing_id}"
 
     def save(self):
         db.session.add(self)

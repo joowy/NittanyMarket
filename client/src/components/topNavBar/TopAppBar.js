@@ -1,13 +1,12 @@
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AppBar, Box, IconButton, styled, Typography } from "@mui/material";
+import Badge from "@mui/material/Badge";
 import { SideBar } from "components/sideBar/SideBar";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { LoginButton } from "./LoginButton";
-import Badge from "@mui/material/Badge";
 import { UserButton } from "./UserButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 export const TopAppBar = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
@@ -15,6 +14,7 @@ export const TopAppBar = () => {
   const { data } = useSelector((state) => state.categoryHierarchy);
   const { data: cartData } = useSelector((state) => state.cart);
 
+  //   https://mui.com/material-ui/react-badge/
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
       right: -3,

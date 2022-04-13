@@ -12,17 +12,19 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
+import { Payment } from "components/cart/Payment";
 import { ReviewPurchase } from "components/cart/ReviewPurchase";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const steps = ["Review order", "Payment details"];
 
-function getStepContent(step) {
+function getStepContent(step, data, cost) {
   switch (step) {
     case 0:
-      return <ReviewPurchase />;
+      return <ReviewPurchase data={data} cost={cost} />;
     case 1:
-      return <div>payment </div>;
+      return <Payment />;
     default:
       throw new Error("Unknown step");
   }
@@ -30,14 +32,20 @@ function getStepContent(step) {
 
 export const CartPage = () => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const { data, total: cost } = useSelector((state) => state.cart);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
+    if (activeStep === 1) {
+      handlePaceOrder();
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  const handlePaceOrder = () => {};
 
   return (
     <Container component="main" maxWidth="sm">
@@ -55,34 +63,38 @@ export const CartPage = () => {
             </Step>
           ))}
         </Stepper>
-        <React.Fragment>
-          {activeStep === steps.length ? (
-            <React.Fragment>
-              <Typography variant="h5" gutterBottom>
-                Thank you for your order.
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              {getStepContent(activeStep)}
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
-                  </Button>
-                )}
 
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                </Button>
-              </Box>
-            </React.Fragment>
-          )}
-        </React.Fragment>
+        {data?.length > 0 ? (
+          <React.Fragment>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography variant="h5" gutterBottom>
+                  Thank you for your order.
+                </Typography>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep, data, cost)}
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                      Back
+                    </Button>
+                  )}
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  </Button>
+                </Box>
+              </React.Fragment>
+            )}
+          </React.Fragment>
+        ) : (
+          <div>Cart Is Empty </div>
+        )}
       </Paper>
     </Container>
   );

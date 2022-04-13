@@ -1,5 +1,5 @@
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Button, CardActions, IconButton } from "@mui/material";
+import { Button, CardActions, IconButton, Menu, MenuItem } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,7 +7,9 @@ import { grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { axiosClient as axios } from "../../api/axios.config";
+
 export const ProductCard = ({
   title,
   product_name,
@@ -21,6 +23,7 @@ export const ProductCard = ({
   category,
   price,
   mode,
+  user_email,
 }) => {
   const [listStatus, setListStatus] = useState(!!product_active_end);
 
@@ -32,6 +35,14 @@ export const ProductCard = ({
     setListStatus(!listStatus);
   };
 
+  const handleAddToCart = () => {
+    axios.post(`cart`, {
+      buyer_email: user_email,
+      product_listing_email: seller_email,
+      product_listing_id: listing_id,
+      cart_quantity: 1,
+    });
+  };
   return (
     <Card
       sx={{
@@ -54,7 +65,7 @@ export const ProductCard = ({
           Name: {product_name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          ${price}, quantity: {quantity}
+          ${price}, quantity available: {quantity}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Seller: {seller_email}
@@ -92,12 +103,24 @@ export const ProductCard = ({
               delist
             </Button>
           )
-        ) : (
-          <IconButton>
-            <AddShoppingCartIcon />
-            <Typography variant={"body2"}>Add to Cart</Typography>
-          </IconButton>
-        )}
+        ) : user_email ? (
+          <>
+            <IconButton>
+              <AddShoppingCartIcon />
+              <Typography variant={"body2"}>Add to Cart</Typography>
+            </IconButton>
+            {/* <Menu
+              id="basic-menu"
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </Menu> */}
+          </>
+        ) : null}
       </CardActions>
     </Card>
   );
