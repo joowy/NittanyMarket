@@ -153,7 +153,7 @@ export const Register = () => {
                   name="city"
                   autoComplete="address-level2"
                 />
-              </Grid>{" "}
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -162,7 +162,7 @@ export const Register = () => {
                   name="state"
                   autoComplete="address-level3"
                 />
-              </Grid>{" "}
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth

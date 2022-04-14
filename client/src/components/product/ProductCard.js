@@ -1,5 +1,4 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Button, CardActions, IconButton, Menu, MenuItem } from "@mui/material";
+import { Button, CardActions } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,11 +6,7 @@ import { grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
-=======
->>>>>>> 83349ceda1167eae819981cabbcc2327c56f2c98
 import { axiosClient as axios } from "../../api/axios.config";
 
 export const ProductCard = ({
@@ -28,6 +23,7 @@ export const ProductCard = ({
   price,
   mode,
   user_email,
+  rating,
 }) => {
   const [listStatus, setListStatus] = useState(!!product_active_end);
   let navigate = useNavigate();
@@ -56,6 +52,7 @@ export const ProductCard = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log(rating);
   return (
     <Card
       sx={{
@@ -70,19 +67,22 @@ export const ProductCard = ({
         image="https://d3a1v57rabk2hm.cloudfront.net/callnumber/betterman_mobile-copy-0/images/product_placeholder.jpg?ts=1581594912&host=call-number.cratejoy.com"
         alt="product"
       />
-      <CardContent
-        onClick={() => {
-          navigate(`/product/${seller_email}/${listing_id}`);
-        }}
-      >
-        <Button style={{ textTransform: "none" }}>
+      <CardContent>
+        <Button
+          style={{ textTransform: "none" }}
+          onClick={() => {
+            navigate(`/product/${seller_email}/${listing_id}`);
+          }}
+        >
           <Typography gutterBottom variant="h6" component="div">
             {title}
           </Typography>
         </Button>
-
         <Typography gutterBottom variant="body2" color="text.secondary">
           Name: {product_name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Category: {category}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           ${price}, quantity available: {quantity}
@@ -91,7 +91,7 @@ export const ProductCard = ({
           Seller: {seller_email}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Category: {category}
+          Seller Rating: {rating}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Description: {product_description}
@@ -123,43 +123,6 @@ export const ProductCard = ({
               delist
             </Button>
           )
-        ) : user_email ? (
-          <>
-            <IconButton>
-              <AddShoppingCartIcon />
-              <Typography variant={"body2"}>Add to Cart</Typography>
-            </IconButton>
-<<<<<<< HEAD
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                "aria-labelledby": "long-button",
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  maxHeight: 10 * 4.5,
-                  width: "20ch",
-                },
-              }}
-            >
-              <MenuItem>xxx</MenuItem>
-            </Menu>
-=======
-            {/* <Menu
-              id="basic-menu"
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>My account</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </Menu> */}
->>>>>>> 83349ceda1167eae819981cabbcc2327c56f2c98
-          </>
         ) : null}
       </CardActions>
     </Card>

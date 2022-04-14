@@ -31,6 +31,7 @@ export const ProductsPage = () => {
             quantity={listing.quantity}
             category={listing.category}
             price={listing.price}
+            rating={listing.rating}
             product_active_end={undefined}
             mode={undefined}
             user_email={userData?.user?.email}

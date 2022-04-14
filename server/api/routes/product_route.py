@@ -2,7 +2,7 @@ from datetime import datetime
 import string
 from typing import List
 
-from api.models import Categories, Product_Listing, db
+from api.models import Categories, Product_Listing, db, Ratings
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from sqlalchemy import func, desc
@@ -45,7 +45,6 @@ def construct_category_heirachy():
                 parent["children"].append(node)
             else:
                 parent["children"] = [node]
-    print(results.keys())
     return results
 
 
@@ -55,6 +54,20 @@ def get_flat_categories_list():
     for category in categories:
         categories_set.add(category.category_name)
     return categories_set
+
+
+def get_seller_rating(seller_email):
+
+    rating = 0
+    seller_ratings = (
+        db.session.query(Ratings).filter(Ratings.seller_email == seller_email).all()
+    )
+
+    for i in seller_ratings:
+        rating += i.rating
+    if seller_ratings:
+        return rating / len(seller_ratings)
+    return "No Rating"
 
 
 @api.route("/category/", defaults={"category": None})
@@ -99,7 +112,13 @@ class GetProducts(Resource):
 
         out = []
         for i in products_list:
-            out.append(i.to_dict())
+            d = dict()
+
+            seller_rating = get_seller_rating(i.seller_email)
+            d.update(i.to_dict())
+            d.update({"rating": seller_rating})
+            out.append(d)
+        print(out)
         return out, 200
 
 
@@ -113,8 +132,14 @@ class UserProducts(Resource):
             .order_by(desc("product_active_start"))
             .all()
         )
-        products = [x.toDICT() for x in out]
 
+        products = []
+        seller_rating = get_seller_rating(out[0].seller_email)
+        for i in out:
+            d = dict()
+            d.update(i.to_dict())
+            d.update({"rating": seller_rating})
+            products.append(d)
         return products, 200
 
 
@@ -195,7 +220,6 @@ class ListProduct(Resource):
                 200,
             )
         except Exception as e:
-            print(e)
             return (
                 {"success": False, "name": _product_name, "msg": f"{str(e)}",},
                 400,
@@ -237,13 +261,11 @@ class DelistProduct(Resource):
 class GetProduct(Resource):
     def get(self, seller_email, listing_id):
 
-        print(seller_email, listing_id)
         listing = (
             db.session.query(Product_Listing)
             .filter(Product_Listing.seller_email == seller_email)
-            .filter(Product_Listing.listing_id)
+            .filter(Product_Listing.listing_id == listing_id)
             .first()
         )
-        print(listing.toDICT())
-        return [], 200
 
+        return listing.toDICT(), 200

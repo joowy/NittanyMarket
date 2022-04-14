@@ -51,6 +51,7 @@ export const CreateProductListingPage = () => {
             <Grid container justifyContent="center" alignItems="center">
               {productList?.length ? (
                 productList.map((listing) => {
+                  console.log(listing);
                   return (
                     <ProductCard
                       key={listing.listing_id + listing.seller_email}
@@ -65,6 +66,7 @@ export const CreateProductListingPage = () => {
                       quantity={listing.quantity}
                       category={listing.category}
                       price={listing.price}
+                      rating={listing.rating}
                       mode={"list"}
                     />
                   );

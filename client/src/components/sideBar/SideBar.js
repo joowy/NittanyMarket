@@ -32,7 +32,7 @@ export const SideBar = ({
               handleClickCategory(treeItemData.name);
             }}
           >
-            <Typography>{treeItemData.name}</Typography>{" "}
+            <Typography>{treeItemData.name}</Typography>
           </Button>
           <TreeItem nodeId={treeItemData.name} children={children} />
         </Box>

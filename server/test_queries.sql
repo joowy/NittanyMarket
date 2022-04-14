@@ -74,9 +74,22 @@ WHERE zipcode = 840;
  Drop table Cart;
 
 -- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
-SELECT * FROM Product_Listing where seller_email = "amaccathayam@nsu.edu";
+SELECT * FROM Product_Listing where seller_email = "dnaughton9f@nsu.edu";
 
  SELECT *
 FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;
 
 DELETE FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;
+
+
+SELECT *
+FROM Reviews where seller_email = "nrideoutmi@nsu.edu" and listing_id = 315;
+
+SELECT Count(*)
+FROM Reviews GROUP by seller_email, listing_id HAVING Count(*) > 0
+
+SELECT * from Local_Vendors where email = "dnaughton9f@nsu.edu" ;
+
+
+SELECT *
+FROM Ratings where seller_email = "abattrick5k@nsu.edu"
