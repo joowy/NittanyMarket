@@ -1,4 +1,4 @@
-import { Button, CardActions } from "@mui/material";
+import { Button, CardActions, Rating } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -34,7 +34,6 @@ export const ProductCard = ({
     });
     setListStatus(!listStatus);
   };
-
   const handleAddToCart = () => {
     axios.post(`cart`, {
       buyer_email: user_email,
@@ -52,7 +51,6 @@ export const ProductCard = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(rating);
   return (
     <Card
       sx={{
@@ -91,7 +89,17 @@ export const ProductCard = ({
           Seller: {seller_email}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Seller Rating: {rating}
+          Seller Rating:{" "}
+          {rating === "No Rating" ? (
+            "No Rating"
+          ) : (
+            <Rating
+              name="simple-controlled"
+              value={rating}
+              size="small"
+              readOnly
+            />
+          )}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Description: {product_description}

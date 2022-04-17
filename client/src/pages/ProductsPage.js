@@ -13,6 +13,7 @@ export const ProductsPage = () => {
   }, [category, dispatch]);
 
   const { data } = useSelector((state) => state.product);
+
   const { userData } = useSelector((state) => state.auth);
 
   if (data && data.length > 0) {

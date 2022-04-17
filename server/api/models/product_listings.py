@@ -58,5 +58,4 @@ class Product_Listing(db.Model, SerializerMixin):
             )
         else:
             cls_dict["product_active_end"] = self.product_active_end
-        # print(cls_dict)
         return cls_dict

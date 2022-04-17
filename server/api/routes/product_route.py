@@ -118,7 +118,6 @@ class GetProducts(Resource):
             d.update(i.to_dict())
             d.update({"rating": seller_rating})
             out.append(d)
-        print(out)
         return out, 200
 
 
@@ -268,4 +267,10 @@ class GetProduct(Resource):
             .first()
         )
 
-        return listing.toDICT(), 200
+        seller_rating = get_seller_rating(seller_email)
+
+        out = listing.toDICT()
+
+        out.update({"seller_rating": seller_rating})
+
+        return out , 200

@@ -1,20 +1,27 @@
+// @ts-nocheck
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {
+  Box,
   Button,
   FormControl,
   MenuItem,
+  Rating,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { axiosClient as axios } from "api/axios.config";
 import { ProductCard } from "components/product/ProductCard";
+import { ReviewCard } from "components/reviews/ReviewCard";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const ProductPage = () => {
   let params = useParams();
-  let [currentProduct, setCurrentProduct] = useState();
+  const [reviews, setReviews] = useState();
+  const [canReview, setCanReviews] = useState();
+
+  const [currentProduct, setCurrentProduct] = useState();
   const [selectedIndex, setSelectedIndex] = useState("");
 
   const handleChange = (event) => {
@@ -28,10 +35,15 @@ export const ProductPage = () => {
       );
       setCurrentProduct(product.data);
     };
-    // const getReviews = async () =>{
-    //     const reviews = await axios.get()
-    // }
+    const getReviews = async () => {
+      const reviews = await axios.get(
+        `/reviews/${params.seller_email}/${params.listing_id}`
+      );
+      setReviews(reviews.data.reviews);
+      setCanReviews(reviews.data.can_review);
+    };
     getProduct();
+    getReviews();
   }, [params]);
 
   if (currentProduct) {
@@ -55,6 +67,7 @@ export const ProductPage = () => {
               category={currentProduct.category}
               price={currentProduct.price}
               mode={undefined}
+              rating={currentProduct.seller_rating}
               user_email={undefined}
             />
 
@@ -82,7 +95,37 @@ export const ProductPage = () => {
           </>
         ) : null}
       </Stack>
-      xdxddadsd
+      <Stack spacing={2}>
+        {reviews?.length ? (
+          reviews?.map((review, index) => {
+            return (
+              <ReviewCard
+                review={review}
+                buyer_email={review.buyer_email}
+                seller_email={review.seller_email}
+                review_desc={review.review_desc}
+                key={index}
+              />
+            );
+          })
+        ) : (
+          <Typography>No Review</Typography>
+        )}
+        <Box sx={{ flexGrow: 1 }} />
+        <FormControl>
+          <Typography component="legend">Write a Review</Typography>
+
+          <TextField sx={{ mt: 2, mb: 2 }} />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={!canReview}
+          >
+            {canReview ? "Submit review" : "Buy to Review"}
+          </Button>
+        </FormControl>
+      </Stack>
     </Stack>
   );
 };
