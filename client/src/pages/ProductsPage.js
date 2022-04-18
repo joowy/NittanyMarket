@@ -14,6 +14,8 @@ export const ProductsPage = () => {
 
   const { data } = useSelector((state) => state.product);
 
+  const { userData } = useSelector((state) => state.auth);
+
   if (data && data.length > 0) {
     return data.map((listing) => {
       if (listing.product_active_end === null) {
@@ -30,8 +32,10 @@ export const ProductsPage = () => {
             quantity={listing.quantity}
             category={listing.category}
             price={listing.price}
+            rating={listing.rating}
             product_active_end={undefined}
             mode={undefined}
+            user_email={userData?.user?.email}
           />
         );
       }

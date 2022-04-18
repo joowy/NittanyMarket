@@ -1,6 +1,7 @@
 import { CartPage } from "pages/CartPage";
 import { CreateProductListingPage } from "pages/CreateProductListingPage";
 import { NotFound404 } from "pages/NotFound404";
+import { ProductPage } from "pages/ProductPage";
 import { ProductsPage } from "pages/ProductsPage";
 import { ProfilePage } from "pages/ProfilePage";
 import { Register } from "pages/RegisterPage";
@@ -22,6 +23,10 @@ export const routes = [
         path: "/product",
         // element: <Navigate to="/" />,
         children: [
+          {
+            path: "/product/:seller_email/:listing_id",
+            element: <ProductPage />,
+          },
           { path: "/product/category/:category", element: <ProductsPage /> },
           { path: "/product/category/", element: <ProductsPage /> },
         ],

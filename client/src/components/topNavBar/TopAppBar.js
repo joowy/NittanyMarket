@@ -1,20 +1,21 @@
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AppBar, Box, IconButton, styled, Typography } from "@mui/material";
+import Badge from "@mui/material/Badge";
 import { SideBar } from "components/sideBar/SideBar";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { LoginButton } from "./LoginButton";
-import Badge from "@mui/material/Badge";
 import { UserButton } from "./UserButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 export const TopAppBar = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   const { isLoggedIn } = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.categoryHierarchy);
-  const { data: cartData } = useSelector((state) => state.cart);
 
+  const { data: cartData, numItems } = useSelector((state) => state.cart);
+
+  //   https://mui.com/material-ui/react-badge/
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
       right: -3,
@@ -67,10 +68,11 @@ export const TopAppBar = () => {
           </Typography>
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
+        {/* <Typography>numItems {numItems} </Typography> */}
         {isLoggedIn ? (
           <Box mr={3}>
             <UserButton />
-            <IconButton aria-label="cart">
+            <IconButton href="/cart" aria-label="cart">
               <StyledBadge
                 badgeContent={cartData?.length}
                 sx={{ color: "white" }}

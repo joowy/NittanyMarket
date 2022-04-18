@@ -2,7 +2,7 @@ from . import db
 from .sellers import Sellers
 
 
-class Local_Vendors(Sellers):
+class Ratings(Sellers):
     __tablename__ = "Local_Vendors"
     email = db.Column(
         db.ForeignKey("Sellers.email", onupdate="CASCADE", ondelete="CASCADE"),

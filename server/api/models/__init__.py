@@ -7,7 +7,7 @@ from .address import Address
 from .users import Users
 from .buyers import Buyers
 from .sellers import Sellers
-from .local_vendors import Local_Vendors
+from .local_vendors import Ratings
 from .categories import Categories
 from .orders import Orders
 from .credit_card import Credit_Cards

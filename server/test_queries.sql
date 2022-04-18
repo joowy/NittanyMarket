@@ -74,18 +74,25 @@ WHERE zipcode = 840;
  Drop table Cart;
 
 -- Delete FROM Product_Listing where seller_email = "abattrick5k@nsu.edu";
-SELECT * FROM Product_Listing where seller_email = "amaccathayam@nsu.edu";
+SELECT * FROM Product_Listing where seller_email = "dnaughton9f@nsu.edu";
 
-SELECT   DISTINCT category
-FROM Product_Listing  
+ SELECT *
+FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;
 
-
-SELECT DISTINCT category
-FROM Product_Listing;
-
-SELECT * FROM Sellers S , Users U  where S.email = U.email and   S.email = "nrideoutmi@nsu.edu" ; 
+DELETE FROM Orders where buyer_email ="abattrick5k@nsu.edu" ;
 
 
-SELECT * from Buyers where email not in (SELECT email from Sellers) 
-SELECT * FROM   sellers  Where email not in (SELECT email from  Buyers) ; 
-SELECT * FROM   Users  Where email in (SELECT email from  Buyers)  and  email in (SELECT email from  Sellers); 
+SELECT *
+FROM Reviews where seller_email = "nrideoutmi@nsu.edu" and listing_id = 315;
+
+SELECT Count(*)
+FROM Reviews GROUP by seller_email, listing_id HAVING Count(*) > 0
+
+SELECT * from Local_Vendors where email = "dnaughton9f@nsu.edu" ;
+
+
+SELECT *
+FROM Ratings where seller_email = "abattrick5k@nsu.edu"
+
+
+SELECT * FROM Product_Listing where Category = "Bottoms"

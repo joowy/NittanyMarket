@@ -301,7 +301,7 @@ export const ProfilePage = () => {
                   name="seller email"
                   disabled={true}
                   defaultValue={sellerInfo.email}
-                />{" "}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField

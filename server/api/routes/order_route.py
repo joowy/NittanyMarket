@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 
+# TODO: delete this file
 from api.models import Categories, Product_Listing, db
 from flask import request
 from flask_restx import Namespace, Resource, fields

@@ -1,5 +1,4 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Button, CardActions, IconButton } from "@mui/material";
+import { Button, CardActions, Rating } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,7 +6,9 @@ import { grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { axiosClient as axios } from "../../api/axios.config";
+
 export const ProductCard = ({
   title,
   product_name,
@@ -21,9 +22,11 @@ export const ProductCard = ({
   category,
   price,
   mode,
+  user_email,
+  rating,
 }) => {
   const [listStatus, setListStatus] = useState(!!product_active_end);
-
+  let navigate = useNavigate();
   const changeListingStatus = async () => {
     await axios.post("product/ChangeListingStatus", {
       email: seller_email,
@@ -31,7 +34,23 @@ export const ProductCard = ({
     });
     setListStatus(!listStatus);
   };
+  const handleAddToCart = () => {
+    axios.post(`cart`, {
+      buyer_email: user_email,
+      product_listing_email: seller_email,
+      product_listing_id: listing_id,
+      cart_quantity: 1,
+    });
+  };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <Card
       sx={{
@@ -47,20 +66,40 @@ export const ProductCard = ({
         alt="product"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title}
-        </Typography>
+        <Button
+          style={{ textTransform: "none" }}
+          onClick={() => {
+            navigate(`/product/${seller_email}/${listing_id}`);
+          }}
+        >
+          <Typography gutterBottom variant="h6" component="div">
+            {title}
+          </Typography>
+        </Button>
         <Typography gutterBottom variant="body2" color="text.secondary">
           Name: {product_name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          ${price}, quantity: {quantity}
+          Category: {category}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          ${price}, quantity available: {quantity}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Seller: {seller_email}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Category: {category}
+          Seller Rating:{" "}
+          {rating === "No Rating" ? (
+            "No Rating"
+          ) : (
+            <Rating
+              name="simple-controlled"
+              value={rating}
+              size="small"
+              readOnly
+            />
+          )}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Description: {product_description}
@@ -92,12 +131,7 @@ export const ProductCard = ({
               delist
             </Button>
           )
-        ) : (
-          <IconButton>
-            <AddShoppingCartIcon />
-            <Typography variant={"body2"}>Add to Cart</Typography>
-          </IconButton>
-        )}
+        ) : null}
       </CardActions>
     </Card>
   );

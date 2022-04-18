@@ -2,7 +2,7 @@ from datetime import datetime
 import string
 from typing import List
 
-from api.models import Categories, Product_Listing, db
+from api.models import Categories, Product_Listing, db, Ratings
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from sqlalchemy import func, desc
@@ -23,7 +23,9 @@ def construct_category_heirachy():
     # create list (parent, child) tuple easier to work with
     lst: List[(str, str)] = []
     for relationship in categories:
-        lst.append((relationship.parent_category, relationship.category_name))
+        lst.append(
+            (relationship.parent_category.strip(), relationship.category_name.strip())
+        )
     results = {}
     for record in lst:
         parent_product = record[0]
@@ -46,12 +48,26 @@ def construct_category_heirachy():
     return results
 
 
-def get_categories_list():
+def get_flat_categories_list():
     categories = Categories.query.all()
     categories_set = set()
     for category in categories:
         categories_set.add(category.category_name)
     return categories_set
+
+
+def get_seller_rating(seller_email):
+
+    rating = 0
+    seller_ratings = (
+        db.session.query(Ratings).filter(Ratings.seller_email == seller_email).all()
+    )
+
+    for i in seller_ratings:
+        rating += i.rating
+    if seller_ratings:
+        return rating / len(seller_ratings)
+    return "No Rating"
 
 
 @api.route("/category/", defaults={"category": None})
@@ -80,12 +96,15 @@ class GetProducts(Resource):
                 db.session.query(Product_Listing)
                 .filter(Product_Listing.category.in_(sub_catagories))
                 .filter(Product_Listing.product_active_end == None)
+                .filter(Product_Listing.quantity > 0)
                 .order_by(desc("product_active_start"))
                 .all()
             )
         else:
             products_list = (
                 db.session.query(Product_Listing)
+                .filter(Product_Listing.product_active_end == None)
+                .filter(Product_Listing.quantity > 0)
                 .order_by(desc("product_active_start"))
                 .limit(40)
                 .all()
@@ -93,7 +112,12 @@ class GetProducts(Resource):
 
         out = []
         for i in products_list:
-            out.append(i.to_dict())
+            d = dict()
+
+            seller_rating = get_seller_rating(i.seller_email)
+            d.update(i.to_dict())
+            d.update({"rating": seller_rating})
+            out.append(d)
         return out, 200
 
 
@@ -107,8 +131,14 @@ class UserProducts(Resource):
             .order_by(desc("product_active_start"))
             .all()
         )
-        products = [x.toDICT() for x in out]
 
+        products = []
+        seller_rating = get_seller_rating(out[0].seller_email)
+        for i in out:
+            d = dict()
+            d.update(i.to_dict())
+            d.update({"rating": seller_rating})
+            products.append(d)
         return products, 200
 
 
@@ -127,7 +157,7 @@ class ProductCategory(Resource):
         flat = request.args.get("flat", default=False, type=bool)
 
         if flat:
-            return list(get_categories_list())
+            return list(get_flat_categories_list())
         else:
             return construct_category_heirachy()["Root"]["children"], 200
 
@@ -165,7 +195,7 @@ class ListProduct(Resource):
 
         # check if req category is a category in data base
         try:
-            categories_set = get_categories_list()
+            categories_set = get_flat_categories_list()
             if _category not in categories_set:
                 raise Exception(f"{_category} not in database")
             new_listing = Product_Listing(
@@ -189,7 +219,6 @@ class ListProduct(Resource):
                 200,
             )
         except Exception as e:
-            print(e)
             return (
                 {"success": False, "name": _product_name, "msg": f"{str(e)}",},
                 400,
@@ -225,3 +254,23 @@ class DelistProduct(Resource):
             },
             200,
         )
+
+
+@api.route("/<seller_email>/<listing_id>")
+class GetProduct(Resource):
+    def get(self, seller_email, listing_id):
+
+        listing = (
+            db.session.query(Product_Listing)
+            .filter(Product_Listing.seller_email == seller_email)
+            .filter(Product_Listing.listing_id == listing_id)
+            .first()
+        )
+
+        seller_rating = get_seller_rating(seller_email)
+
+        out = listing.toDICT()
+
+        out.update({"seller_rating": seller_rating})
+
+        return out , 200

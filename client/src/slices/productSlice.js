@@ -26,13 +26,18 @@ const productData = {
   loading: true,
   error: null,
   data: null,
+  currentItem: null,
 };
 const initialState = productData;
 
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentItem(state, obj) {
+      state.currentItem = obj;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(GetCategoryProducts.pending, (state, action) => {
       state.loading = true;
