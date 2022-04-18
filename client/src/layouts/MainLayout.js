@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { GetCategoryHierarchy } from "slices/productCategoriesHierarchySlice";
 import { GetProfileData } from "slices/userProfileSlice";
-import { getCart } from "../slices/cartSlice";
+import { getCart, actions } from "../slices/cartSlice";
 export const MainLayout = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);

@@ -93,3 +93,6 @@ SELECT * from Local_Vendors where email = "dnaughton9f@nsu.edu" ;
 
 SELECT *
 FROM Ratings where seller_email = "abattrick5k@nsu.edu"
+
+
+SELECT * FROM Product_Listing where Category = "Bottoms"

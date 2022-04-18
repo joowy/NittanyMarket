@@ -14,16 +14,21 @@ import { axiosClient as axios } from "api/axios.config";
 import { ProductCard } from "components/product/ProductCard";
 import { ReviewCard } from "components/reviews/ReviewCard";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 export const ProductPage = () => {
   let params = useParams();
+  const dispatch = useDispatch();
+
   const [reviews, setReviews] = useState();
   const [canReview, setCanReviews] = useState();
+  const [sellerReviewValue, setSellerReviewValue] = React.useState(2);
 
   const [currentProduct, setCurrentProduct] = useState();
-  const [selectedIndex, setSelectedIndex] = useState("");
-
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const { userData } = useSelector((state) => state.auth);
+  const { data: cartData } = useSelector((state) => state.cart);
   const handleChange = (event) => {
     setSelectedIndex(event.target.value);
   };
@@ -45,6 +50,19 @@ export const ProductPage = () => {
     getProduct();
     getReviews();
   }, [params]);
+
+  const handleAddToCart = async () => {
+    await axios.post(`/cart/`, {
+      buyer_email: userData.user.email,
+      product_listing_email: currentProduct.seller_email,
+      product_listing_id: currentProduct.listing_id,
+      cart_quantity: selectedIndex,
+    });
+    // console.log("ss");
+    //   console.log(cartData.length);
+    //   console.log(cartData.length + 1);
+    //   dispatch(actions.setNumberItems(cartData.length));
+  };
 
   if (currentProduct) {
     options = Array.from({ length: currentProduct.quantity }, (_, i) => i + 1);
@@ -88,7 +106,7 @@ export const ProductPage = () => {
                 ))}
               </TextField>
             </FormControl>
-            <Button fullWidth>
+            <Button fullWidth onClick={handleAddToCart}>
               <AddShoppingCartIcon />
               <Typography>Add to Cart</Typography>
             </Button>
@@ -96,6 +114,7 @@ export const ProductPage = () => {
         ) : null}
       </Stack>
       <Stack spacing={2}>
+        <Typography>Reviews </Typography>
         {reviews?.length ? (
           reviews?.map((review, index) => {
             return (
@@ -114,7 +133,14 @@ export const ProductPage = () => {
         <Box sx={{ flexGrow: 1 }} />
         <FormControl>
           <Typography component="legend">Write a Review</Typography>
-
+          Rate Seller{" "}
+          <Rating
+            name="simple-controlled"
+            value={sellerReviewValue}
+            onChange={(event, newValue) => {
+              setSellerReviewValue(newValue);
+            }}
+          />
           <TextField sx={{ mt: 2, mb: 2 }} />
           <Button
             variant="contained"

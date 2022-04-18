@@ -1,3 +1,4 @@
+from cmath import log
 from datetime import datetime
 from typing import List
 
@@ -36,20 +37,30 @@ class CartRoute(Resource):
         _product_listing_id = req_data.get("product_listing_id")
         _cart_quantity = req_data.get("cart_quantity")
 
-        new_cart_item = Cart(
-            buyer_email=_buyer_email,
-            product_listing_email=_product_listing_email,
-            product_listing_id=_product_listing_id,
-            cart_quantity=_cart_quantity,
-        )
-        new_cart_item.save()
-        return (
-            {
-                "success": True,
-                "msg": f"{_product_listing_email} {_product_listing_id} was successfully added to cart",
-            },
-            200,
-        )
+        try:
+            new_cart_item = Cart(
+                buyer_email=_buyer_email,
+                product_listing_email=_product_listing_email,
+                product_listing_id=_product_listing_id,
+                cart_quantity=_cart_quantity,
+            )
+            new_cart_item.save()
+
+            return (
+                {
+                    "success": True,
+                    "msg": f"{_product_listing_email} {_product_listing_id} was successfully added to cart",
+                },
+                200,
+            )
+        except:
+            return (
+                {
+                    "success": False,
+                    "msg": f"{_product_listing_email} {_product_listing_id} was failed to add to cart",
+                },
+                400,
+            )
 
 
 @api.route("/delete", defaults={"user_email": None})

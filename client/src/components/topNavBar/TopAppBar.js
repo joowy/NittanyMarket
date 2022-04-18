@@ -12,7 +12,8 @@ export const TopAppBar = () => {
 
   const { isLoggedIn } = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.categoryHierarchy);
-  const { data: cartData } = useSelector((state) => state.cart);
+
+  const { data: cartData, numItems } = useSelector((state) => state.cart);
 
   //   https://mui.com/material-ui/react-badge/
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -67,6 +68,7 @@ export const TopAppBar = () => {
           </Typography>
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
+        {/* <Typography>numItems {numItems} </Typography> */}
         {isLoggedIn ? (
           <Box mr={3}>
             <UserButton />
