@@ -10,6 +10,7 @@ from .auth_route import api as buyersAuthNs
 from .product_route import api as productNs
 from .cart_route import api as cartNs
 from .review_route import api as reviewNs
+from .rating_route import api as ratingNs
 
 # from .order_route import api as orderNs
 
@@ -19,11 +20,10 @@ from .review_route import api as reviewNs
 #     path="/",
 # )
 
-rest_api.add_namespace(
-    buyersAuthNs, path="/api/auth",
-)
+rest_api.add_namespace(buyersAuthNs, path="/api/auth")
 rest_api.add_namespace(usersNs, path="/api/users")
 rest_api.add_namespace(productNs, path="/api/product")
 # rest_api.add_namespace(orderNs, path="/api/order")
 rest_api.add_namespace(cartNs, path="/api/cart")
 rest_api.add_namespace(reviewNs, path="/api/reviews")
+rest_api.add_namespace(ratingNs, path="/api/ratings")

@@ -2,16 +2,13 @@ import {
   Box,
   Button,
   Container,
-  Divider,
-  Grid,
-  IconButton,
   Paper,
-  Stack,
   Step,
   StepLabel,
   Stepper,
   Typography,
 } from "@mui/material";
+import { axiosClient as axios } from "api/axios.config";
 import { Payment } from "components/cart/Payment";
 import { ReviewPurchase } from "components/cart/ReviewPurchase";
 import React from "react";
@@ -33,6 +30,7 @@ function getStepContent(step, data, cost) {
 export const CartPage = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const { data, total: cost } = useSelector((state) => state.cart);
+  const { userData } = useSelector((state) => state.auth);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -45,7 +43,9 @@ export const CartPage = () => {
     setActiveStep(activeStep - 1);
   };
 
-  const handlePaceOrder = () => {};
+  const handlePaceOrder = async () => {
+    await axios.post(`/cart/placeorder`, { buyer_email: userData.user.email });
+  };
 
   return (
     <Container component="main" maxWidth="sm">
