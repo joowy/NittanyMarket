@@ -1,10 +1,8 @@
 # Nittany Market Front-end
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [MUI](https://mui.com/material-ui/).
 
 ## Run the code
-
-
 
 > **Step #1** - change directory to client 
 

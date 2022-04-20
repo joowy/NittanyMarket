@@ -16,3 +16,8 @@ Nittany Market is a online market place for the Nittany State University Communi
 ## Run the code
 
 To run the code, follow the instructions in the README located at client and server directory.
+
+## Tech Stack 
+
+- React with MUI, Redux-Toolkit, Axios, React-Router
+- Flask with flask-sqlalchemy
