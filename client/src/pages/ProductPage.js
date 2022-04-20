@@ -65,15 +65,15 @@ export const ProductPage = () => {
     if (reviewBody === "") {
       alert("review should not be empty");
     } else {
-      await axios.post(`/reviews/${params.seller_email}/${params.listing_id}`, {
-        buyer_email: userData.user.email,
-        review_desc: reviewBody,
-      });
-
-      await axios.post(`/reviews/${params.seller_email}/${params.listing_id}`, {
-        buyer_email: userData.user.email,
-        review_desc: reviewBody,
-      });
+      const response = await axios
+        .post(`/reviews/${params.seller_email}/${params.listing_id}`, {
+          buyer_email: userData.user.email,
+          review_desc: reviewBody,
+        })
+        .catch((error) => {
+          alert("you have already reviewed");
+        });
+      window.location.reload();
     }
   };
   if (currentProduct) {
