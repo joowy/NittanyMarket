@@ -80,10 +80,10 @@ export const ProductCard = ({
           Name: {product_name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Category: {category}
+          Price: ${price}, quantity available: {quantity}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          ${price}, quantity available: {quantity}
+          Category: {category}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Seller: {seller_email}

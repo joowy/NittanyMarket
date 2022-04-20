@@ -92,7 +92,18 @@ SELECT * from Local_Vendors where email = "dnaughton9f@nsu.edu" ;
 
 
 SELECT *
-FROM Ratings where seller_email = "abattrick5k@nsu.edu"
+FROM Ratings where seller_email = "abattrick5k@nsu.edu";
 
 
-SELECT * FROM Product_Listing where Category = "Bottoms"
+SELECT * FROM Product_Listing where Category = "Bottoms";
+
+
+SELECT *
+FROM Orders WHERE buyer_email = "abattrick5k@nsu.edu" 
+and seller_email = "wspadelli8j@nsu.edu" 
+and listing_id = 747;
+
+
+DELETE FROM Reviews WHERE review_desc is NULL;
+
+DELETE FROM Ratings WHERE rating is NULL;

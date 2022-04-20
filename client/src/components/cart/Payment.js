@@ -1,12 +1,4 @@
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Radio, Stack, TextField } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -28,7 +20,7 @@ export const Payment = () => {
           name="radio-buttons"
           inputProps={{ "aria-label": "A" }}
         />
-        New Credit Card: <TextField size="small" />
+        Use saved credit card: {profileData.BuyerInfo.credit_card_last_four}
       </div>
       <div>
         <Radio
@@ -38,7 +30,7 @@ export const Payment = () => {
           name="radio-buttons"
           inputProps={{ "aria-label": "B" }}
         />
-        Use saved credit card: {profileData.BuyerInfo.credit_card_last_four}
+        New Credit Card: <TextField size="small" />
       </div>
     </Stack>
   );

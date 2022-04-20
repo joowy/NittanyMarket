@@ -19,7 +19,6 @@ import { useParams } from "react-router-dom";
 
 export const ProductPage = () => {
   let params = useParams();
-  const dispatch = useDispatch();
 
   const [reviews, setReviews] = useState();
   const [canReview, setCanReviews] = useState();
@@ -27,9 +26,10 @@ export const ProductPage = () => {
 
   const [currentProduct, setCurrentProduct] = useState();
   const [selectedIndex, setSelectedIndex] = useState(1);
+  const [reviewBody, setReviewBody] = useState("");
+
   const { userData } = useSelector((state) => state.auth);
-  const { data: cartData } = useSelector((state) => state.cart);
-  const handleChange = (event) => {
+  const handleChangeQuantity = (event) => {
     setSelectedIndex(event.target.value);
   };
   let options = [1, 2];
@@ -42,15 +42,14 @@ export const ProductPage = () => {
     };
     const getReviews = async () => {
       const reviews = await axios.get(
-        `/reviews/${params.seller_email}/${params.listing_id}`
+        `/reviews/${params.seller_email}/${params.listing_id}?user=${userData.user.email}`
       );
       setReviews(reviews.data.reviews);
       setCanReviews(reviews.data.can_review);
     };
     getProduct();
     getReviews();
-  }, [params]);
-
+  }, [params, userData]);
   const handleAddToCart = async () => {
     await axios.post(`/cart/`, {
       buyer_email: userData.user.email,
@@ -58,12 +57,25 @@ export const ProductPage = () => {
       product_listing_id: currentProduct.listing_id,
       cart_quantity: selectedIndex,
     });
-    // console.log("ss");
-    //   console.log(cartData.length);
-    //   console.log(cartData.length + 1);
-    //   dispatch(actions.setNumberItems(cartData.length));
   };
-
+  const handleChangeReview = (event) => {
+    setReviewBody(event.target.value);
+  };
+  const handleSubmitReview = async () => {
+    if (reviewBody === "") {
+      alert("review should not be empty");
+    } else {
+      const response = await axios
+        .post(`/reviews/${params.seller_email}/${params.listing_id}`, {
+          buyer_email: userData.user.email,
+          review_desc: reviewBody,
+        })
+        .catch((error) => {
+          alert("you have already reviewed");
+        });
+      window.location.reload();
+    }
+  };
   if (currentProduct) {
     options = Array.from({ length: currentProduct.quantity }, (_, i) => i + 1);
   }
@@ -94,7 +106,7 @@ export const ProductPage = () => {
                 id="standard-select-currency"
                 label="Quantity"
                 value={selectedIndex}
-                onChange={handleChange}
+                onChange={handleChangeQuantity}
                 fullWidth
                 variant="standard"
                 select
@@ -133,20 +145,29 @@ export const ProductPage = () => {
         <Box sx={{ flexGrow: 1 }} />
         <FormControl>
           <Typography component="legend">Write a Review</Typography>
-          Rate Seller{" "}
-          <Rating
-            name="simple-controlled"
-            value={sellerReviewValue}
-            onChange={(event, newValue) => {
-              setSellerReviewValue(newValue);
-            }}
+          <Stack direction={"row"}>
+            <Typography component="legend">Rate Seller: </Typography>
+            <Rating
+              name="simple-controlled"
+              value={sellerReviewValue}
+              disabled={!canReview}
+              onChange={(event, newValue) => {
+                setSellerReviewValue(newValue);
+              }}
+            />
+          </Stack>
+          <TextField
+            sx={{ mt: 2, mb: 2 }}
+            disabled={!canReview}
+            value={reviewBody}
+            onChange={handleChangeReview}
           />
-          <TextField sx={{ mt: 2, mb: 2 }} />
           <Button
             variant="contained"
             color="primary"
             type="submit"
             disabled={!canReview}
+            onClick={handleSubmitReview}
           >
             {canReview ? "Submit review" : "Buy to Review"}
           </Button>
