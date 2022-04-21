@@ -38,8 +38,13 @@ update_password_model = api.model(
     {"password": fields.String(required=True, min_length=4, max_length=16),},
 )
 
-# https://github.com/app-generator/flask-api-sample/tree/8f64e8cc942fc7ff436900fb4f099b1f88f4642c
+
 def token_required(f):
+
+    """"
+    @Author   https://github.com/app-generator/api-server-flask
+    """
+
     @wraps(f)
     def decorator(*args, **kwargs):
 
@@ -82,11 +87,6 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
 
     return decorator
-
-
-"""
-    Flask-Restx routes
-"""
 
 
 @api.route("/register")

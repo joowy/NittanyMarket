@@ -1,8 +1,6 @@
-import { Box, Typography, IconButton } from "@mui/material";
-import React, { useState } from "react";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, IconButton, Typography } from "@mui/material";
+import React, { useState } from "react";
 export const SideBarItem = ({ name }) => {
   const [showSubCat, setShowSubCat] = useState(true);
 
