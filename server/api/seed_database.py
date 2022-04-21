@@ -30,7 +30,14 @@ def seed_all():
         table_name = table.__tablename__
         try:
             file = os.path.join(mock_data_dir, f"{table_name}.csv")
-            data = csv.reader(open(file, encoding="cp1252"))
+
+            data = csv.reader(
+                open(
+                    file,
+                    # handle reading special characters
+                    encoding="cp1252",
+                )
+            )
             # skip header row
             next(data)
             print(f"seeding {table_name}")

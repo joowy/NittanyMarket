@@ -1,8 +1,8 @@
 ## Nittany Market API Server
 
 This template got me started: https://github.com/app-generator/api-server-flask
-## Run the code 
 
+## Run the code
 
 > **Step #1** - Clone the project
 
@@ -37,11 +37,14 @@ $ pip install -r requirements.txt
 
 > **Step #4** - set environment variables
 
-*copy env.example*
+_copy env.example_
+
 ```bash
-$ cp .env.example .env 
+$ cp .env.example .env
 ```
-in .env, set variables 
+
+in .env, set variables
+
 ```
 SECRET_KEY= example
 JWT_SECRET_KEY = example
@@ -49,12 +52,11 @@ JWT_SECRET_KEY = example
 FLASK_HOST = "127.0.0.1"
 FLASK_PORT = 7000
 ```
- 
+
 <br />
 
 > **Step 5** - start test APIs server at `http://127.0.0.1/:7000`
 
 ```bash
-$ python run.py 
+$ python run.py
 ```
- 
