@@ -23,5 +23,5 @@ To run the code, follow the instructions in the README located at client and ser
 
 ## Control Flow 
 <!-- Just pics will suffice -->
-![Alt text](./Nittany_Market_control_flow.svg)
+[diagram](https://drive.google.com/file/d/1KsmQa41D1jbPvK-rl8txC4n9d3Ii42i7/view?usp=sharing)
  
