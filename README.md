@@ -21,3 +21,7 @@ To run the code, follow the instructions in the README located at client and ser
 
 - React with MUI, Redux-Toolkit, Axios, React-Router
 - Flask with flask-sqlalchemy
+
+## Control Flow 
+
+<!-- Just pics will suffice -->
