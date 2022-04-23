@@ -54,6 +54,11 @@ get_user_model = api.model(
 
 
 def token_required(f):
+
+    """"
+    @Author   https://github.com/app-generator/api-server-flask
+    """
+
     @wraps(f)
     def decorator(*args, **kwargs):
 
@@ -102,12 +107,11 @@ def token_required(f):
 class User(Resource):
     @api.response(model=get_user_model, code=200, description="get user info success")
     @api.response(model=error_model, code=400, description="get user info fail")
-    # @token_required
-    # def get(self, current_user, email):
     def get(self, email):
         buyer_info = None
         seller_info = None
         try:
+
             buyer_record = (
                 db.session.query(Buyers).filter(Buyers.email == email).first()
             )
@@ -152,16 +156,18 @@ class User(Resource):
                     "state_id": buyer_home_zip_info_record.state_id,
                     "city": buyer_home_zip_info_record.city,
                 }
+
+                last_four = None 
                 # buyer credit card
                 buyer_credit_card_record = (
                     db.session.query(Credit_Cards)
                     .filter(buyer_record.email == Credit_Cards.owner_email)
                     .first()
                 )
-
-                last_four = ("****-" * 3) + buyer_credit_card_record.credit_card_num[
-                    -4:
-                ]
+                if buyer_credit_card_record:
+                    last_four = (
+                        "****-" * 3
+                    ) + buyer_credit_card_record.credit_card_num[-4:]
                 buyer_info = {
                     "email": buyer_record.email,
                     "first_name": buyer_record.first_name,
@@ -189,5 +195,6 @@ class User(Resource):
             )
 
         except Exception as e:
-            return {"success": False, "msg": e}, 400
+            # return {"success": False, "msg": e}, 400
+            return {"success": False}, 400
 
