@@ -22,8 +22,6 @@ To run the code, follow the instructions in the README located at client and ser
 - Flask with flask-sqlalchemy
 
 ## Control Flow 
-
 <!-- Just pics will suffice -->
+![Alt text](./Nittany_Market_control_flow.svg)
  
-
-??????

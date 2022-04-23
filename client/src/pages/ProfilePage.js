@@ -114,6 +114,7 @@ export const ProfilePage = () => {
                       id="new_password"
                       label="New Password"
                       name="new_password"
+                      type="password"
                       value={passwordField}
                       onChange={handleChange}
                     />
