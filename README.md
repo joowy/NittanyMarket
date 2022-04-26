@@ -2,24 +2,40 @@
 
 Nittany Market is a online market place for the Nittany State University Community.
 
-## Prototype Features Implement
+## Prototype Features Implementations
 
-- User Login
-- Checking user information
-- Product category hierarchy
-- Publish product listing
+- User login and registration 
+- Checking user information and change password 
 - Place order
+- Product category hierarchy
+
+## Extra Credit Functionality
+- Publish product listing
 - Reviews and Rating
-- Extra credit functionality: shopping cart
+- Shopping cart
 
 ## Run the code
 
-To run the code, follow the instructions in the README located at client and server directory.
+To run the code, follow the instructions in the README located in the client and server directory.
+
+## Design Decisions
+- Client-server model: Client and the server communicate via HTTP methods. Data are exchanged using JSON. 
+
+- Database is maintained and accessed using Sqlalchemy and Flask-sqlalchemy ORM. 
 
 ## Tech Stack
 
-- React with MUI, Redux-Toolkit, Axios, React-Router
-- Flask with flask-sqlalchemy
+- Front-end 
+    - [React](https://reactjs.org/docs/getting-started.html)  
+    - [MUI](https://mui.com/material-ui/getting-started/installation/)
+    - [Redux-Toolkit](https://redux-toolkit.js.org/introduction/getting-started) 
+    - [Axios](https://axios-http.com/docs/intro) 
+    - [React-Router](https://v5.reactrouter.com/web/guides/quick-start)
+- Back-end
+    - [Sqlite](https://www.sqlite.org/docs.html)
+    - [Flask](https://flask.palletsprojects.com/en/2.1.x/)
+    - [Flask-sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) 
+    - [Flask-restx](https://flask-restx.readthedocs.io/en/latest/)
 
 ## Control Flow 
 <!-- Just pics will suffice -->
