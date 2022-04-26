@@ -19,8 +19,8 @@ $ cd NittanyMarket/server
 
 ```bash
 $ # Virtualenv modules installation (Unix based systems)
-$ virtualenv env
-$ source env/bin/activate
+$ python3 -m venv ./venv
+$ source venv/bin/activate
 $
 $ # Virtualenv modules installation (Windows based systems)
 $ # python -m virtualenv venv
